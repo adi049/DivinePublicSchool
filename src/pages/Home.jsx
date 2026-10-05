@@ -43,7 +43,7 @@ export default function Home() {
       <section className="hero">
         <div className="hero__bg">
           <img
-            src={`${import.meta.env.BASE_URL}images/hero-campus.jpg`}
+            src={https://adi049.github.io/DivinePublicSchool/images/hero-campus.jpg}
             alt="Campus of Divine Public School, Gurugram"
             fetchpriority="high"
             decoding="async"
@@ -156,7 +156,7 @@ export default function Home() {
         <div className="container split">
           <Reveal className="split__media">
             <img
-              src={`${import.meta.env.BASE_URL}images/about-building.jpg`}
+              src={https://adi049.github.io/DivinePublicSchool/images/about-building.jpg}
               alt="Front facade of Divine Public School"
               loading="lazy"
               decoding="async"
