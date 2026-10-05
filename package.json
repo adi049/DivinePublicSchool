@@ -1,0 +1,25 @@
+{
+  "name": "divine-public-school",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Website frontend for Divine Public School, Marityu Kunj, Gurugram (CBSE) — built with React, Vite, React Router, Framer Motion and Lucide icons.",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.1.0",
+    "@fontsource/lora": "^5.1.0",
+    "framer-motion": "^11.11.17",
+    "lucide-react": "^0.454.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.3",
+    "vite": "^5.4.10"
+  }
+}
