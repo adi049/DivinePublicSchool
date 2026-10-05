@@ -2,7 +2,7 @@ import { ASSETS } from './assets.js'
 
 export const GALLERY_CATEGORIES = ['Campus','Classrooms','Events','Activities','Sports','Cultural Programs','Celebrations','Students','Other']
 
-const image = (name, caption, alt, category) => ({ src: ASSETS.gallery[name.replace(/\\.jpg$/, '')], caption, alt, category })
+const image = (name, caption, alt, category) => ({ src: ASSETS.gallery[name.replace(/\.jpg$/, '')], caption, alt, category })
 
 export const GALLERY_IMAGES = [
  image('campus-front.jpg','The school campus on a working morning','Front view of the Divine Public School campus with students walking in','Campus'),
