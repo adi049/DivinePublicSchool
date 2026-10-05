@@ -6,7 +6,7 @@ import {
   BookOpen, Users, Sprout, Palette, ShieldCheck, Eye, Target, Lightbulb, HeartHandshake,
 } from 'lucide-react'
 
-const ASSET = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`
+const ASSET = (path) => `https://adi049.github.io/DivinePublicSchool/${path.replace(/^\/+/, '')}`
 
 export const SCHOOL = {
   name: 'Divine Public School', tagline: 'Vatika Kunj Ext., Gurugram · CBSE Curriculum', board: 'CBSE',
