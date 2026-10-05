@@ -1,4 +1,4 @@
-const ASSET = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`
+const ASSET = (path) => `https://adi049.github.io/DivinePublicSchool/${path.replace(/^\/+/, '')}`
 
 export const GALLERY_CATEGORIES = ['Campus','Classrooms','Events','Activities','Sports','Cultural Programs','Celebrations','Students','Other']
 
