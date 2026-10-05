@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 export default function PageHero({ title, description, image, crumb }) {
-  const imageUrl = image?.startsWith('/') ? `${import.meta.env.BASE_URL}${image.slice(1)}` : image
+  const imageUrl = image?.startsWith('/') ? `https://adi049.github.io/DivinePublicSchool/${image.slice(1)}` : image
   return (
     <div className="page-hero">
       <div className="page-hero__bg" style={{ backgroundImage: `url(${imageUrl})` }} aria-hidden="true" />
