@@ -6,7 +6,7 @@ import {
   BookOpen, Users, Sprout, Palette, ShieldCheck, Eye, Target, Lightbulb, HeartHandshake,
 } from 'lucide-react'
 
-const ASSET = (path) => `https://adi049.github.io/DivinePublicSchool/${path.replace(/^\/+/, '')}`
+import { ASSETS } from './assets.js'
 
 export const SCHOOL = {
   name: 'Divine Public School', tagline: 'Vatika Kunj Ext., Gurugram · CBSE Curriculum', board: 'CBSE',
@@ -25,7 +25,7 @@ export const NAV_LINKS = [
 ]
 
 export const DIRECTOR = {
-  name: 'Mr. Bhumesh Chander', designation: 'Director, Divine Public School', photo: ASSET('/images/director-bhumesh-chander.jpg'),
+  name: 'Mr. Bhumesh Chander', designation: 'Director, Divine Public School', photo: ASSETS.directorBhumeshChander,
   photoAlt: 'Mr. Bhumesh Chander, Director of Divine Public School',
   excerpt: 'Education without moral is like a shift without a compass merely wondering nowhere.',
   message: [

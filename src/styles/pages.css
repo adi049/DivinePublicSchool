@@ -566,3 +566,29 @@
   flex-wrap: wrap;
   gap: 0.85rem;
 }
+
+
+/* Mobile: keep the information-strip label and value clearly separated. */
+@media (max-width: 560px) {
+  .strip__item {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-items: start;
+    column-gap: 0.85rem;
+  }
+  .strip__item > span:last-child {
+    min-width: 0;
+    display: block;
+  }
+  .strip__label,
+  .strip__value {
+    display: block;
+  }
+  .strip__label {
+    margin-bottom: 0.18rem;
+  }
+  .strip__value {
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+}

@@ -18,6 +18,7 @@ import CTABand from '../components/ui/CTABand.jsx'
 import MapPlaceholder from '../components/ui/MapPlaceholder.jsx'
 import { SCHOOL, WHY_CHOOSE } from '../data/school.js'
 import { GALLERY_IMAGES } from '../data/gallery.js'
+import { ASSETS } from '../data/assets.js'
 
 const HERO_EASE = [0.22, 1, 0.36, 1]
 
@@ -43,7 +44,7 @@ export default function Home() {
       <section className="hero">
         <div className="hero__bg">
           <img
-            src={https://adi049.github.io/DivinePublicSchool/images/hero-campus.jpg}
+            src={ASSETS.heroCampus}
             alt="Campus of Divine Public School, Gurugram"
             fetchpriority="high"
             decoding="async"
@@ -156,7 +157,7 @@ export default function Home() {
         <div className="container split">
           <Reveal className="split__media">
             <img
-              src={https://adi049.github.io/DivinePublicSchool/images/about-building.jpg}
+              src={ASSETS.aboutBuilding}
               alt="Front facade of Divine Public School"
               loading="lazy"
               decoding="async"
