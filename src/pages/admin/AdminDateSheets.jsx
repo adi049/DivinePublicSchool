@@ -126,10 +126,14 @@ export default function AdminDateSheets() {
     }
   }
 
-  const togglePublish = () => {
-    setDateSheetPublished(existing.id, !existing.published)
-    toast.success(existing.published ? 'Date sheet unpublished (hidden from website).' : 'Date sheet published.')
-    setTick((t) => t + 1)
+  const togglePublish = async () => {
+    try {
+      await setDateSheetPublished(existing.id, !existing.published)
+      toast.success(existing.published ? 'Date sheet unpublished (hidden from website).' : 'Date sheet published.')
+      setTick((t) => t + 1)
+    } catch (error) {
+      toast.error(error.message || 'Could not update date sheet publishing status.')
+    }
   }
 
   return (
