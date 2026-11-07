@@ -156,7 +156,7 @@ export async function bootstrapRemoteData() {
         else localStorage.setItem(LS_PREFIX + key, JSON.stringify(rows))
       } else if (isSignedIn && cached && (Array.isArray(cached) ? cached.length : true)) {
         mirrorRecords(key, rowsFor(key, cached), [])
-      } else if (!hasKey(key)) {
+      } else if (!hasKey(key) && key !== 'subjects') {
         if (key === 'settings') localStorage.setItem(LS_PREFIX + key, JSON.stringify({ announcement: { enabled: false, text: '' }, updated_at: null }))
         else localStorage.setItem(LS_PREFIX + key, JSON.stringify([]))
       }
