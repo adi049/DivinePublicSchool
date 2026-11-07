@@ -24,8 +24,8 @@ function all() {
   return loadRecords(KEY, [])
 }
 
-function persist(records) {
-  saveRecords(KEY, records)
+async function persist(records) {
+  await saveRecords(KEY, records)
   emitContentChanged()
 }
 
@@ -79,21 +79,21 @@ export async function saveTimetable(input) {
   }
 
   const next = existing ? records.map((r) => (r.id === existing.id ? record : r)) : [...records, record]
-  persist(next)
+  await persist(next)
   return record
 }
 
 /** Toggle publish state without touching the image. */
-export function setTimetablePublished(id, published) {
+export async function setTimetablePublished(id, published) {
   const records = all().map((r) => (r.id === id ? { ...r, published, updated_at: nowISO() } : r))
-  persist(records)
+  await persist(records)
 }
 
 /** Delete a timetable and its stored photo. */
 export async function deleteTimetable(id) {
   const record = all().find((r) => r.id === id)
   if (record?.image_file_id) await deleteFile(record.image_file_id)
-  persist(all().filter((r) => r.id !== id))
+  await persist(all().filter((r) => r.id !== id))
 }
 
 /** Resolve a record's stored photo to a displayable object URL. */
