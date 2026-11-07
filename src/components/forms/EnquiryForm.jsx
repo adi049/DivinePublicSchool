@@ -9,9 +9,8 @@ import { supabaseRequest } from '../../services/supabaseClient.js'
  * Enquiry form — used on the Contact page (variant="contact") and the
  * Admissions page (variant="admissions").
  *
- * FRONTEND ONLY: no backend is connected yet. On successful validation the
- * form shows a confirmation message. To connect a backend later, replace the
- * simulated delay in `handleSubmit` with a `fetch()` POST to your endpoint.
+ * Enquiries are inserted into Supabase. Public users can submit only new
+ * enquiries; administrators can review and update them through RLS-protected access.
  */
 export default function EnquiryForm({ variant = 'contact' }) {
   const isAdmission = variant === 'admissions'
@@ -131,7 +130,7 @@ export default function EnquiryForm({ variant = 'contact' }) {
           phone: values.phone.replace(/\D/g, '').slice(-10),
           email: values.email.trim(),
           class_interested: values.classInterested,
-          message: values.message.trim() || null,
+          message: values.message.trim(),
           enquiry_type: isAdmission ? 'admissions' : 'contact',
           status: 'new',
         },
