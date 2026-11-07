@@ -91,9 +91,13 @@ export default function AdminGallery() {
     }
   }
 
-  const handleToggle = (photo) => {
-    setPhotoHidden(photo.uid, !photo.hidden)
-    toast.success(photo.hidden ? 'Photograph visible again.' : 'Photograph hidden from the public gallery.')
+  const handleToggle = async (photo) => {
+    try {
+      await setPhotoHidden(photo.uid, !photo.hidden)
+      toast.success(photo.hidden ? 'Photograph visible again.' : 'Photograph hidden from the public gallery.')
+    } catch (error) {
+      toast.error(error.message || 'Could not update gallery visibility. Please try again.')
+    }
   }
 
   const handleDelete = async () => {
