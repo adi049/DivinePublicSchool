@@ -33,7 +33,7 @@ export default function AdminEnquiries() {
     } finally {
       setLoading(false)
     }
-  }, [toast])
+  }, [])
 
   useEffect(() => { load() }, [load])
 
