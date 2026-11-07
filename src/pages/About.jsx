@@ -1,17 +1,16 @@
-import { GraduationCap, BookOpen, MapPin, CalendarCheck } from 'lucide-react'
+import { Ruler, School, FlaskConical, Users, Wifi, ArrowRight } from 'lucide-react'
 import useSEO from '../hooks/useSEO.js'
 import PageHero from '../components/ui/PageHero.jsx'
 import SectionHeading from '../components/ui/SectionHeading.jsx'
 import Reveal from '../components/ui/Reveal.jsx'
 import DirectorCard from '../components/ui/DirectorCard.jsx'
 import CTABand from '../components/ui/CTABand.jsx'
-import { SCHOOL, SCHOOL_VALUES, ABOUT_INTRO } from '../data/school.js'
+import Button from '../components/ui/Button.jsx'
+import { SCHOOL_VALUES, ABOUT_INTRO, FACILITIES } from '../data/school.js'
+import { assetUrl } from '../utils/assetUrl.js'
 
 export default function About() {
-  useSEO(
-    'About Us | Divine Public School, Vatika Kunj Extension, Gurugram',
-    'Learn about Divine Public School — a CBSE-curriculum school in Vatika Kunj Extension, Gurugram, its vision, mission, values and the Director’s message.',
-  )
+  useSEO({ page: 'about' })
 
   return (
     <>
@@ -37,33 +36,42 @@ export default function About() {
               <h3>The school at a glance</h3>
               <ul>
                 <li>
-                  <BookOpen size={17} aria-hidden="true" />
+                  <Ruler size={17} aria-hidden="true" />
                   <span>
-                    <strong>Curriculum:</strong> CBSE pattern, from foundational years to board
-                    classes
+                    <strong>Campus area:</strong> 4056 sq. mtr.
                   </span>
                 </li>
                 <li>
-                  <GraduationCap size={17} aria-hidden="true" />
+                  <School size={17} aria-hidden="true" />
                   <span>
-                    <strong>Classes:</strong> {SCHOOL.classesOffered} — with Science, Commerce and
-                    Humanities streams in Classes 11–12
+                    <strong>Classrooms:</strong> 18 well-ventilated classrooms
                   </span>
                 </li>
                 <li>
-                  <MapPin size={17} aria-hidden="true" />
+                  <FlaskConical size={17} aria-hidden="true" />
                   <span>
-                    <strong>Location:</strong> {SCHOOL.address}
+                    <strong>Laboratories:</strong> 4 labs, including a computer lab
                   </span>
                 </li>
                 <li>
-                  <CalendarCheck size={17} aria-hidden="true" />
+                  <Users size={17} aria-hidden="true" />
                   <span>
-                    <strong>Session {SCHOOL.session}:</strong> Admission enquiries welcome for all
-                    classes
+                    <strong>Teaching staff:</strong> 21 teachers (PGT, TGT &amp; PRT)
+                  </span>
+                </li>
+                <li>
+                  <Wifi size={17} aria-hidden="true" />
+                  <span>
+                    <strong>Connectivity:</strong> Internet facility available on campus
                   </span>
                 </li>
               </ul>
+              <p className="fact-card__source">
+                Figures as published in the school’s Public Mandatory Disclosure.
+              </p>
+              <Button to="/mandatory-disclosure" variant="outline" icon={ArrowRight} block>
+                View Mandatory Disclosure
+              </Button>
             </aside>
           </Reveal>
         </div>
@@ -106,6 +114,62 @@ export default function About() {
                   </span>
                   <h3>{value.title}</h3>
                   <p>{value.text}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --------------------------------------- INFRASTRUCTURE & FACILITIES */}
+      <section className="section section--tint" aria-labelledby="facilities-heading">
+        <div className="container">
+          <Reveal>
+            <SectionHeading
+              align="center"
+              eyebrow="Campus"
+              title="Infrastructure &amp; facilities"
+              sub="Facilities for smooth teaching–learning, student development and administration — as listed by the school."
+            />
+          </Reveal>
+
+          {/* Real campus photographs */}
+          <div className="infra-photos">
+            {[
+              {
+                src: 'images/campus-entrance.jpg',
+                alt: 'Covered main entrance of Divine Public School with the school signboard',
+                cap: 'Covered main entrance',
+              },
+              {
+                src: 'images/gallery/building-front.jpg',
+                alt: 'Main academic block of Divine Public School',
+                cap: 'Academic building',
+              },
+              {
+                src: 'images/gallery/playground-transport.jpg',
+                alt: 'School buses and play area at Divine Public School',
+                cap: 'Play area & transport',
+              },
+            ].map((p, i) => (
+              <Reveal key={p.src} delay={0.05 + i * 0.06}>
+                <figure className="infra-photo">
+                  <img src={assetUrl(p.src)} alt={p.alt} loading="lazy" decoding="async" />
+                  <figcaption>{p.cap}</figcaption>
+                </figure>
+              </Reveal>
+            ))}
+          </div>
+
+          <div className="why-grid">
+            {FACILITIES.map((item, i) => (
+              <Reveal key={item.title} delay={Math.min(i * 0.05, 0.3)}>
+                <article className="why-card">
+                  <span className="why-card__icon">
+                    <item.icon size={21} aria-hidden="true" />
+                  </span>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
                 </article>
               </Reveal>
             ))}

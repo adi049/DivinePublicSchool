@@ -1,0 +1,19 @@
+{
+  "name": "Divine Public School",
+  "short_name": "Divine Public School",
+  "description": "CBSE school in Gurugram, Haryana — Nursery to Class XII.",
+  "start_url": "/DivinePublicSchool/",
+  "scope": "/DivinePublicSchool/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#12295c",
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/DivinePublicSchool/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

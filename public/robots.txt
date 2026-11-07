@@ -1,0 +1,13 @@
+# robots.txt — Divine Public School
+# NOTE: on a GitHub Pages *project* site, crawlers read robots.txt from the
+# domain root (https://adi049.github.io/robots.txt), not from this sub-path.
+# This file becomes authoritative the moment the site moves to a custom domain.
+
+User-agent: *
+Allow: /DivinePublicSchool/
+
+# Admin screens are hash routes (…/#/admin) and are not crawlable, but they are
+# also marked noindex in the app itself.
+Disallow: /DivinePublicSchool/admin
+
+Sitemap: https://adi049.github.io/DivinePublicSchool/sitemap.xml

@@ -1,18 +1,16 @@
 // ============================================================================
-// CURRICULUM DATA  —  FRONTEND PLACEHOLDER, FULLY EDITABLE
+// CURRICULUM DATA — CLASS PROFILES (descriptions, highlights) AND SUBJECT SEEDS
 // ============================================================================
-// The subjects and timetables below are sample data used to build the website
-// interface. The school's actual class-wise curriculum and timetables should
-// be confirmed by the school administration and edited directly in this file.
+// Class summaries/highlights below are editable here. SUBJECT LISTS are now
+// managed from the Admin Dashboard (Manage Subjects): the arrays in this file
+// are used once to seed the subject service on first run, after which the
+// saved lists in src/services/subjectService.js are the live source.
 //
 // HOW TO EDIT:
 //  • To change the subjects of a class, edit its `subjects` array below.
 //  • For Class 11 & 12, subjects are edited per stream (science / commerce /
 //    humanities).
-//  • Timetables are shared per group of classes (prePrimary, primary, middle,
-//    secondary, science, commerce, humanities). Edit the TIMETABLES object at
-//    the bottom of this file. Days are ordered Monday → Saturday.
-// ============================================================================
+//// ============================================================================
 
 export const CLASSES = [
   {
@@ -36,11 +34,10 @@ export const CLASSES = [
       'Rhymes',
       'Physical Activities',
     ],
-    timetable: 'prePrimary',
   },
   {
-    id: 'lkg',
-    label: 'LKG',
+    id: 'kg',
+    label: 'KG',
     stage: 'Pre-Primary',
     age: '4+ years',
     summary:
@@ -59,11 +56,10 @@ export const CLASSES = [
       'Rhymes & Storytelling',
       'Physical Education',
     ],
-    timetable: 'prePrimary',
   },
   {
-    id: 'ukg',
-    label: 'UKG',
+    id: 'ekg',
+    label: 'EKG',
     stage: 'Pre-Primary',
     age: '5+ years',
     summary:
@@ -82,7 +78,6 @@ export const CLASSES = [
       'Rhymes & Storytelling',
       'Physical Education',
     ],
-    timetable: 'prePrimary',
   },
   {
     id: 'class-1',
@@ -106,7 +101,6 @@ export const CLASSES = [
       'Art & Craft',
       'Physical Education',
     ],
-    timetable: 'primary',
   },
   {
     id: 'class-2',
@@ -130,7 +124,6 @@ export const CLASSES = [
       'Art & Craft',
       'Physical Education',
     ],
-    timetable: 'primary',
   },
   {
     id: 'class-3',
@@ -155,7 +148,6 @@ export const CLASSES = [
       'Art & Craft',
       'Physical Education',
     ],
-    timetable: 'primary',
   },
   {
     id: 'class-4',
@@ -180,7 +172,6 @@ export const CLASSES = [
       'Art & Craft',
       'Physical Education',
     ],
-    timetable: 'primary',
   },
   {
     id: 'class-5',
@@ -205,7 +196,6 @@ export const CLASSES = [
       'Art & Craft',
       'Physical Education',
     ],
-    timetable: 'primary',
   },
   {
     id: 'class-6',
@@ -230,7 +220,6 @@ export const CLASSES = [
       'Physical Education',
       'Art Education',
     ],
-    timetable: 'middle',
   },
   {
     id: 'class-7',
@@ -255,7 +244,6 @@ export const CLASSES = [
       'Physical Education',
       'Art Education',
     ],
-    timetable: 'middle',
   },
   {
     id: 'class-8',
@@ -280,7 +268,6 @@ export const CLASSES = [
       'Physical Education',
       'Art Education',
     ],
-    timetable: 'middle',
   },
   {
     id: 'class-9',
@@ -304,7 +291,6 @@ export const CLASSES = [
       'Physical & Health Education',
       'Art Education',
     ],
-    timetable: 'secondary',
   },
   {
     id: 'class-10',
@@ -328,7 +314,6 @@ export const CLASSES = [
       'Physical & Health Education',
       'Art Education',
     ],
-    timetable: 'secondary',
   },
   {
     id: 'class-11',
@@ -343,7 +328,6 @@ export const CLASSES = [
       'Guidance for competitive and career pathways',
     ],
     hasStreams: true,
-    timetable: 'per-stream',
   },
   {
     id: 'class-12',
@@ -358,7 +342,6 @@ export const CLASSES = [
       'College application and career guidance',
     ],
     hasStreams: true,
-    timetable: 'per-stream',
   },
 ]
 
@@ -380,7 +363,6 @@ export const STREAMS = {
       'Biology / Computer Science',
       'Physical Education',
     ],
-    timetable: 'science',
   },
   commerce: {
     id: 'commerce',
@@ -396,10 +378,9 @@ export const STREAMS = {
       'Mathematics / Applied Mathematics',
       'Entrepreneurship / Physical Education',
     ],
-    timetable: 'commerce',
   },
-  humanities: {
-    id: 'humanities',
+  arts: {
+    id: 'arts',
     label: 'Arts / Humanities',
     icon: 'Landmark',
     blurb:
@@ -412,165 +393,27 @@ export const STREAMS = {
       'Economics',
       'Sociology / Psychology',
     ],
-    timetable: 'humanities',
   },
 }
 
 // Options used in the contact & admission enquiry forms (generated from above)
 export const CLASS_OPTIONS = [
   'Nursery',
-  'LKG',
-  'UKG',
+  'KG',
+  'EKG',
   ...Array.from({ length: 10 }, (_, i) => `Class ${i + 1}`),
   'Class 11 – Science',
   'Class 11 – Commerce',
-  'Class 11 – Humanities',
+  'Class 11 – Arts',
   'Class 12 – Science',
   'Class 12 – Commerce',
-  'Class 12 – Humanities',
+  'Class 12 – Arts',
 ]
 
 // ----------------------------------------------------------------------------
-// SAMPLE TIMETABLES  (front-end placeholders — replace with actual timetables)
+// TIMETABLES & DATE SHEETS
 // ----------------------------------------------------------------------------
-// `days` arrays are ordered: Monday, Tuesday, Wednesday, Thursday, Friday,
-// Saturday. Rows marked with `breakRow: true` render as break/lunch rows.
+// Timetables and examination date sheets are uploaded as photographs / PDFs by
+// the school office through the Admin Dashboard (Manage Timetables / Date
+// Sheets) and stored via src/services/. No table data lives in this file.
 // ----------------------------------------------------------------------------
-
-const DAY_TIMES = ['08:00 – 08:40', '08:40 – 09:20', '09:35 – 10:15', '10:15 – 10:55', '10:55 – 11:35', '12:05 – 12:45', '12:45 – 13:25', '13:25 – 14:05']
-
-function buildDay(periods) {
-  const rows = []
-  const times = [...DAY_TIMES]
-  let periodNo = 0
-  for (const days of periods) {
-    if (days === 'SHORT BREAK') {
-      rows.push({ breakRow: true, label: 'Short Break', time: '09:20 – 09:35' })
-      continue
-    }
-    if (days === 'LUNCH') {
-      rows.push({ breakRow: true, label: 'Lunch Break', time: '11:35 – 12:05' })
-      continue
-    }
-    rows.push({ period: ++periodNo, time: times.shift(), days })
-  }
-  return rows
-}
-
-export const TIMETABLES = {
-  prePrimary: {
-    label: 'Pre-Primary (Nursery – UKG) · 9:00 AM – 12:30 PM',
-    periodLabel: 'Period',
-    rows: [
-      { period: 1, time: '09:00 – 09:30', days: ['Assembly & Rhymes', 'Rhymes & Action Songs', 'Assembly & Rhymes', 'Rhymes & Action Songs', 'Assembly & Rhymes', 'Activity & Free Play'] },
-      { period: 2, time: '09:30 – 10:05', days: ['English', 'English', 'English', 'Hindi', 'Hindi', 'Art & Craft'] },
-      { period: 3, time: '10:05 – 10:40', days: ['Mathematics', 'Mathematics', 'Hindi', 'Mathematics', 'English', 'Rhymes'] },
-      { breakRow: true, label: 'Snack Break', time: '10:40 – 11:00' },
-      { period: 4, time: '11:00 – 11:35', days: ['EVS / GK', 'Art & Craft', 'Mathematics', 'English', 'EVS / GK', 'Outdoor Play'] },
-      { period: 5, time: '11:35 – 12:10', days: ['Outdoor Play', 'EVS / GK', 'Art & Craft', 'Story Time', 'Music & Movement', 'Story Time'] },
-      { period: 6, time: '12:10 – 12:30', days: ['Story Time & Pack-up', 'Story Time & Pack-up', 'Story Time & Pack-up', 'Story Time & Pack-up', 'Story Time & Pack-up', 'Pack-up'] },
-    ],
-  },
-
-  primary: {
-    label: 'Primary (Classes 1 – 5) · 8:00 AM – 2:05 PM',
-    periodLabel: 'Period',
-    rows: buildDay([
-      ['English', 'Mathematics', 'Hindi', 'English', 'Mathematics', 'Computer'],
-      ['Mathematics', 'English', 'EVS', 'Hindi', 'English', 'Art & Craft'],
-      'SHORT BREAK',
-      ['Hindi', 'EVS', 'Mathematics', 'Mathematics', 'Hindi', 'General Knowledge'],
-      ['EVS', 'Hindi', 'English', 'EVS', 'Mathematics', 'Music'],
-      ['Mathematics', 'Computer', 'English', 'General Knowledge', 'EVS', 'Library'],
-      'LUNCH',
-      ['Computer', 'Physical Education', 'Art & Craft', 'Hindi', 'English', 'Physical Education'],
-      ['Art & Craft', 'General Knowledge', 'Computer', 'Music', 'Physical Education', 'Class Activity'],
-      ['Library', 'Art & Craft', 'Physical Education', 'English', 'Hindi', 'Club Activity'],
-    ]),
-  },
-
-  middle: {
-    label: 'Middle School (Classes 6 – 8) · 8:00 AM – 2:05 PM',
-    periodLabel: 'Period',
-    rows: buildDay([
-      ['English', 'Mathematics', 'Science', 'Hindi', 'Mathematics', 'Sanskrit'],
-      ['Mathematics', 'English', 'Hindi', 'Science', 'English', 'Computer'],
-      'SHORT BREAK',
-      ['Science', 'Social Science', 'Mathematics', 'English', 'Hindi', 'Art Education'],
-      ['Hindi', 'Science', 'Social Science', 'Mathematics', 'Science', 'Library'],
-      ['Social Science', 'Hindi', 'English', 'Sanskrit', 'Social Science', 'Physical Education'],
-      'LUNCH',
-      ['Computer', 'Sanskrit', 'Science', 'Social Science', 'English', 'General Knowledge'],
-      ['Sanskrit', 'Computer', 'Physical Education', 'Art Education', 'Computer', 'Club Activity'],
-      ['Art Education', 'Library', 'General Knowledge', 'Physical Education', 'Mathematics', 'Weekly Test'],
-    ]),
-  },
-
-  secondary: {
-    label: 'Secondary (Classes 9 – 10) · 8:00 AM – 2:05 PM',
-    periodLabel: 'Period',
-    rows: buildDay([
-      ['Mathematics', 'English', 'Science', 'Mathematics', 'English', 'Science'],
-      ['Science', 'Mathematics', 'Social Science', 'English', 'Mathematics', 'Computer Applications'],
-      'SHORT BREAK',
-      ['English', 'Science', 'Mathematics', 'Social Science', 'Hindi', 'Health & PE'],
-      ['Social Science', 'Hindi', 'English', 'Science', 'Social Science', 'Library'],
-      ['Hindi', 'Social Science', 'Science', 'Hindi', 'Science', 'Art Education'],
-      'LUNCH',
-      ['Computer Applications', 'Physical Education', 'Social Science', 'Computer Applications', 'Mathematics', 'Mathematics Practice'],
-      ['Science Lab', 'Computer Applications', 'Health & PE', 'Art Education', 'English', 'Club Activity'],
-      ['Library', 'Art Education', 'English', 'Physical Education', 'Social Science', 'Weekly Test'],
-    ]),
-  },
-
-  science: {
-    label: 'Senior Secondary — Science · 8:00 AM – 2:05 PM',
-    periodLabel: 'Period',
-    rows: buildDay([
-      ['Physics', 'Chemistry', 'English', 'Mathematics', 'Physics', 'Chemistry'],
-      ['Chemistry', 'Mathematics', 'Physics', 'Chemistry', 'Mathematics', 'Physics'],
-      'SHORT BREAK',
-      ['Mathematics', 'Physics', 'Mathematics', 'English', 'Chemistry', 'Mathematics'],
-      ['English', 'Biology / CS', 'Chemistry', 'Physics', 'Biology / CS', 'Library'],
-      ['Biology / CS', 'English', 'Biology / CS', 'Biology / CS', 'English', 'Physical Education'],
-      'LUNCH',
-      ['Physics Practical', 'Chemistry Practical', 'Biology / CS Lab', 'Mathematics', 'Self Study', 'Physics Practical'],
-      ['Self Study', 'Physical Education', 'English', 'Computer Lab', 'Physics', 'Chemistry Practical'],
-      ['Library', 'Self Study', 'Mathematics', 'Self Study', 'Chemistry', 'Weekly Test'],
-    ]),
-  },
-
-  commerce: {
-    label: 'Senior Secondary — Commerce · 8:00 AM – 2:05 PM',
-    periodLabel: 'Period',
-    rows: buildDay([
-      ['Accountancy', 'Business Studies', 'Economics', 'Accountancy', 'Business Studies', 'Economics'],
-      ['Business Studies', 'Accountancy', 'English', 'Economics', 'Accountancy', 'Accountancy'],
-      'SHORT BREAK',
-      ['Economics', 'English', 'Accountancy', 'Business Studies', 'Mathematics', 'Business Studies'],
-      ['English', 'Economics', 'Mathematics', 'English', 'Economics', 'Library'],
-      ['Mathematics', 'Accountancy', 'Business Studies', 'Mathematics', 'English', 'Physical Education'],
-      'LUNCH',
-      ['Entrepreneurship', 'Mathematics', 'Economics', 'Accountancy', 'Business Studies', 'Entrepreneurship'],
-      ['Self Study', 'Physical Education', 'English', 'Economics', 'Accountancy', 'Club Activity'],
-      ['Library', 'Self Study', 'Business Studies', 'Self Study', 'Economics', 'Weekly Test'],
-    ]),
-  },
-
-  humanities: {
-    label: 'Senior Secondary — Humanities · 8:00 AM – 2:05 PM',
-    periodLabel: 'Period',
-    rows: buildDay([
-      ['History', 'Political Science', 'English', 'Geography', 'History', 'Economics'],
-      ['Political Science', 'History', 'Geography', 'English', 'Political Science', 'History'],
-      'SHORT BREAK',
-      ['English', 'Economics', 'Political Science', 'History', 'Geography', 'Political Science'],
-      ['Geography', 'English', 'Economics', 'Sociology / Psychology', 'English', 'Library'],
-      ['Economics', 'History', 'Geography', 'Economics', 'Sociology / Psychology', 'Physical Education'],
-      'LUNCH',
-      ['Sociology / Psychology', 'Physical Education', 'English', 'Political Science', 'History', 'Self Study'],
-      ['Self Study', 'Library', 'Geography', 'Economics', 'Political Science', 'Club Activity'],
-      ['Library', 'Self Study', 'History', 'Self Study', 'English', 'Weekly Test'],
-    ]),
-  },
-}

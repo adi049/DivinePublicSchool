@@ -48,7 +48,7 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   color: #d9f4e6;
-  background: rgba(67, 163, 124, 0.22);
+  background: rgba(20, 102, 63, 0.22);
   border: 1px solid rgba(255, 255, 255, 0.28);
   padding: 0.45rem 0.85rem;
   border-radius: 8px;
@@ -459,7 +459,8 @@
   padding: 1.6rem 1.6rem;
 }
 
-.side-card h3 {
+.side-card h3,
+.side-card h2 {
   font-size: 1.05rem;
   margin-bottom: 1.1rem;
 }
@@ -567,28 +568,136 @@
   gap: 0.85rem;
 }
 
+/* ==========================================================================
+   VIBRANT SPECTRUM — page-level colour accents (styling-only overlay)
+   ========================================================================== */
 
-/* Mobile: keep the information-strip label and value clearly separated. */
-@media (max-width: 560px) {
-  .strip__item {
-    display: grid;
-    grid-template-columns: 44px minmax(0, 1fr);
-    align-items: start;
-    column-gap: 0.85rem;
-  }
-  .strip__item > span:last-child {
-    min-width: 0;
-    display: block;
-  }
-  .strip__label,
-  .strip__value {
-    display: block;
-  }
-  .strip__label {
-    margin-bottom: 0.18rem;
-  }
-  .strip__value {
-    line-height: 1.45;
-    overflow-wrap: anywhere;
-  }
+/* ---------------- home hero: richer veil + spectrum strip -------------- */
+.hero__veil {
+  background:
+    radial-gradient(46% 60% at 85% 15%, rgba(8, 145, 178, 0.32), transparent 72%),
+    radial-gradient(40% 55% at 8% 88%, rgba(166, 36, 108, 0.34), transparent 72%),
+    linear-gradient(
+      95deg,
+      rgba(16, 31, 60, 0.9) 0%,
+      rgba(16, 31, 60, 0.64) 46%,
+      rgba(16, 31, 60, 0.18) 100%
+    );
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  z-index: 2;
+  background: linear-gradient(
+    90deg,
+    var(--blue) 0%,
+    var(--cyan) 24%,
+    var(--emerald) 48%,
+    #eab308 72%,
+    var(--magenta) 100%
+  );
+}
+
+.hero__badge {
+  background: rgba(15, 122, 74, 0.26);
+  border-color: rgba(127, 224, 179, 0.45);
+  color: #d9f7e7;
+}
+
+/* ---------------- inner page heroes ------------------------------------- */
+.page-hero__veil {
+  background:
+    radial-gradient(40% 70% at 88% 12%, rgba(8, 145, 178, 0.3), transparent 70%),
+    radial-gradient(34% 55% at 6% 88%, rgba(166, 36, 108, 0.3), transparent 70%),
+    linear-gradient(100deg, rgba(16, 31, 60, 0.94) 30%, rgba(16, 31, 60, 0.58));
+}
+
+.page-hero::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--blue) 0%,
+    var(--cyan) 24%,
+    var(--emerald) 48%,
+    #eab308 72%,
+    var(--magenta) 100%
+  );
+}
+
+.page-hero__crumbs a {
+  color: #9fe0f2;
+}
+
+.page-hero__crumbs span[aria-hidden='true'] {
+  color: #f7bfdd;
+}
+
+/* ---------------- split media frame accents ----------------------------- */
+.split__media::before {
+  border-color: #cfe4b9; /* soft light-green frame */
+}
+
+.split__media--flip::before {
+  border-color: #f7bfdd; /* soft pink frame */
+}
+
+/* ---------------- home stage rows — coloured accent bars ----------------- */
+.stage-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 4px 0 0 4px;
+}
+
+.stage-row {
+  position: relative;
+}
+
+.stage-list > a:nth-child(4n+1)::before { background: var(--blue); }
+.stage-list > a:nth-child(4n+2)::before { background: var(--emerald); }
+.stage-list > a:nth-child(4n+3)::before { background: var(--magenta); }
+.stage-list > a:nth-child(4n+4)::before { background: #eab308; }
+
+.stage-row__arrow {
+  color: var(--magenta);
+}
+
+/* ---------------- admissions page ----------------------------------------- */
+.adm-hero-points li::before {
+  background: linear-gradient(135deg, var(--blue), var(--magenta));
+}
+
+/* ---------------- contact map placeholder accent -------------------------- */
+.map-ph {
+  background:
+    radial-gradient(50% 60% at 80% 15%, rgba(8, 145, 178, 0.12), transparent 72%),
+    radial-gradient(45% 55% at 12% 85%, rgba(166, 36, 108, 0.1), transparent 72%),
+    var(--cyan-50);
+  border-color: var(--cyan-100);
+}
+
+.map-ph__icon {
+  color: var(--magenta);
+}
+
+/* school-life preview heading link */
+.life-more {
+  color: var(--magenta-deep);
+}
+
+.life-more:hover {
+  color: var(--magenta);
 }

@@ -1,7 +1,43 @@
-import { Link } from 'react-router-dom'
+import { useRef, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { MapPin, Phone, MessageCircle, Mail, CalendarCheck } from 'lucide-react'
 import Logo from '../ui/Logo.jsx'
 import { SCHOOL } from '../../data/school.js'
+
+/**
+ * Staff access trigger — a very small school logo in the bottom bar.
+ * Three consecutive clicks (within 1.2s each) open the Admin Access screen.
+ * Deliberately discreet; harmless when clicked normally.
+ */
+function AdminShortcut() {
+  const navigate = useNavigate()
+  const [count, setCount] = useState(0)
+  const timer = useRef(null)
+
+  const handleClick = () => {
+    const next = count + 1
+    setCount(next)
+    window.clearTimeout(timer.current)
+    if (next >= 3) {
+      setCount(0)
+      navigate('/admin')
+      return
+    }
+    timer.current = window.setTimeout(() => setCount(0), 1200)
+  }
+
+  return (
+    <button
+      type="button"
+      className="footer__adminkey"
+      onClick={handleClick}
+      aria-label="School administration"
+      title="School administration"
+    >
+      <Logo size={22} />
+    </button>
+  )
+}
 
 const QUICK_LINKS = [
   { label: 'Home', to: '/' },
@@ -13,6 +49,7 @@ const QUICK_LINKS = [
 
 const EXPLORE_LINKS = [
   { label: 'Admissions 2026–27', to: '/admissions' },
+  { label: 'Public Mandatory Disclosure', to: '/mandatory-disclosure' },
   { label: 'Privacy Policy', to: '/privacy-policy' },
   { label: 'Terms & Conditions', to: '/terms-and-conditions' },
 ]
@@ -104,8 +141,11 @@ export default function Footer() {
 
       <div className="footer__bottom">
         <div className="container footer__bottom-inner">
-          <span>
-            © {year} Divine Public School, {SCHOOL.addressShort}. All rights reserved.
+          <span className="footer__copy">
+            <AdminShortcut />
+            <span>
+              © {year} Divine Public School, {SCHOOL.addressShort}. All rights reserved.
+            </span>
           </span>
           <nav className="footer__legal" aria-label="Legal">
             <Link to="/privacy-policy">Privacy Policy</Link>

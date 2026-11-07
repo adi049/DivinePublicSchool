@@ -25,10 +25,7 @@ const STEPS = [
 ]
 
 export default function Admissions() {
-  useSEO(
-    'Admissions 2026–27 | Divine Public School, Vatika Kunj Extension, Gurugram',
-    'Admission enquiries for the 2026–27 session at Divine Public School, Gurugram — Nursery to Class XII with Science, Commerce and Humanities streams. Contact the school for availability and details.',
-  )
+  useSEO({ page: 'admissions' })
 
   return (
     <>
@@ -51,7 +48,7 @@ export default function Admissions() {
           </Reveal>
           <Reveal delay={0.08}>
             <div className="class-cloud" aria-label="Classes offered">
-              {['Nursery', 'LKG', 'UKG', ...Array.from({ length: 10 }, (_, i) => `Class ${i + 1}`)].map(
+              {['Nursery', 'KG', 'EKG', ...Array.from({ length: 10 }, (_, i) => `Class ${i + 1}`)].map(
                 (label) => (
                   <span className="tag" key={label}>
                     {label}

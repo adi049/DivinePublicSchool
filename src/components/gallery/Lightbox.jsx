@@ -65,7 +65,7 @@ export default function Lightbox({ images, index, onClose, onNavigate }) {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
           >
-            <img className="lb__img" src={current.src} alt={current.alt} />
+            <img className="lb__img" src={current.src} alt={current.alt} loading="eager" decoding="async" />
             <figcaption className="lb__cap">{current.caption}</figcaption>
             <div className="lb__count">
               {index + 1} of {images.length} · {current.category}

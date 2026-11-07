@@ -3,40 +3,66 @@
    ========================================================================== */
 
 :root {
-  /* color palette — white base, light blue accent, soft green secondary */
+  /* color palette — royal school theme
+     royal blue identity · deep green secondary · rich magenta accent · silver details */
   --white: #ffffff;
-  --ink: #0e2c49;            /* headings, strong text */
-  --ink-soft: #3c5470;       /* body text */
-  --muted: #677d92;          /* secondary text */
+  --ink: #12264e;            /* headings, strong text (deep royal navy) */
+  --ink-soft: #3d4c68;       /* body text */
+  --muted: #67748c;          /* secondary text, silver-slate */
 
-  --blue: #1e6fc4;           /* primary accent */
-  --blue-deep: #17599e;
-  --blue-ink: #16406e;
-  --blue-50: #f3f8fd;
-  --blue-100: #e4eff9;
-  --blue-200: #c9dff3;
+  --blue: #1f4ba3;           /* ROYAL BLUE — primary */
+  --blue-deep: #173a82;
+  --blue-ink: #12295c;
+  --blue-50: #f2f6fc;
+  --blue-100: #e6edf9;
+  --blue-200: #c9d7f0;
 
-  --green: #43a37c;          /* secondary accent */
-  --green-deep: #368a68;
-  --green-50: #eff8f3;
-  --green-100: #ddefe6;
+  --green: #14663f;          /* DEEP GREEN — secondary */
+  --green-deep: #0e4f31;
+  --green-50: #eef7f1;
+  --green-100: #d8ecdf;
 
-  --navy: #0d2843;           /* footer */
-  --navy-2: #133a60;
+  --magenta: #a6246c;        /* RICH MAGENTA — accent (used sparingly) */
+  --magenta-deep: #861b56;
+  --magenta-50: #fbf0f6;
+  --magenta-100: #f2d9e7;
 
-  --line: #e2ebf3;
-  --line-soft: #edf3f8;
-  --bg-tint: #f7fbfe;
+  /* --- vibrant spectrum additions (colour revision) --- */
+  --cyan: #0891b2;           /* CYAN — fresh secondary accent */
+  --cyan-deep: #0d7e9c;
+  --cyan-50: #eaf9fd;
+  --cyan-100: #d2eef7;
 
-  --danger: #c34545;
+  --pink: #d6448c;           /* PINK — warm family accent */
+  --pink-deep: #b82e72;
+  --pink-50: #fdeef5;
+  --pink-100: #f9d4e6;
+
+  --emerald: #0f7a4a;        /* deeper emerald for strong marks (green family unchanged) */
+
+  --amber: #c98a04;          /* YELLOW (darkened for text-safe contrast) */
+  --amber-deep: #a2701a;
+  --yellow-50: #fdf7dd;
+  --yellow-100: #f8eab6;
+
+  --navy: #101f3c;           /* footer / hero overlay — deep royal navy */
+  --navy-2: #1a2d52;
+
+  --silver: #c8cfd9;         /* SILVER — borders, highlights, premium details */
+  --silver-dark: #aab4c4;
+  --line: #e3e8f0;
+  --line-soft: #eef1f6;
+  --bg-tint: #f9fbfd;
+
+  --danger: #b03a3a;
   --danger-soft: #fdf1f1;
 
   --radius: 14px;
   --radius-sm: 10px;
 
-  --shadow-sm: 0 1px 2px rgba(14, 44, 73, 0.06);
-  --shadow-md: 0 10px 28px -14px rgba(14, 44, 73, 0.22);
-  --shadow-lg: 0 24px 48px -20px rgba(14, 44, 73, 0.28);
+  --shadow-sm: 0 1px 2px rgba(18, 38, 78, 0.07);
+  --shadow-md: 0 10px 28px -14px rgba(18, 38, 78, 0.24);
+  --shadow-lg: 0 24px 48px -20px rgba(18, 38, 78, 0.3);
 
   --nav-h: 78px;
 
@@ -104,11 +130,11 @@ ul {
 }
 
 ::selection {
-  background: rgba(30, 111, 196, 0.18);
+  background: rgba(31, 75, 163, 0.18);
 }
 
 :focus-visible {
-  outline: 3px solid rgba(30, 111, 196, 0.4);
+  outline: 3px solid rgba(31, 75, 163, 0.4);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -158,13 +184,13 @@ p.lead {
 }
 
 .section--tint {
-  background: var(--bg-tint);
-  border-block: 1px solid var(--line-soft);
+  background: #edf8fc;           /* light cyan wash */
+  border-block: 1px solid #d6eef6;
 }
 
 .section--green {
-  background: linear-gradient(180deg, var(--white), var(--green-50));
-  border-block: 1px solid var(--line-soft);
+  background: linear-gradient(180deg, var(--white), #ecf9ef);  /* light green wash */
+  border-block: 1px solid #d5efdc;
 }
 
 .eyebrow {
@@ -182,7 +208,7 @@ p.lead {
   content: '';
   width: 26px;
   height: 2px;
-  background: var(--green);
+  background: var(--magenta);
   border-radius: 2px;
 }
 
@@ -238,7 +264,7 @@ p.lead {
 .btn--primary {
   background: var(--blue);
   color: #fff;
-  box-shadow: 0 8px 18px -10px rgba(30, 111, 196, 0.65);
+  box-shadow: 0 8px 18px -10px rgba(31, 75, 163, 0.65);
 }
 
 .btn--primary:hover {
@@ -250,7 +276,7 @@ p.lead {
 .btn--green {
   background: var(--green);
   color: #fff;
-  box-shadow: 0 8px 18px -10px rgba(67, 163, 124, 0.6);
+  box-shadow: 0 8px 18px -10px rgba(20, 102, 63, 0.6);
 }
 
 .btn--green:hover {
@@ -331,7 +357,7 @@ p.lead {
 .textarea:focus {
   outline: none;
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(30, 111, 196, 0.12);
+  box-shadow: 0 0 0 3px rgba(31, 75, 163, 0.12);
 }
 
 .input.is-invalid,
@@ -374,6 +400,18 @@ p.lead {
   border-color: var(--green-100);
 }
 
+.tag--magenta {
+  color: var(--magenta-deep);
+  background: var(--magenta-50);
+  border-color: var(--magenta-100);
+}
+
+.tag--silver {
+  color: var(--ink-soft);
+  background: var(--line-soft);
+  border-color: var(--silver);
+}
+
 /* ---------- small helpers ---------- */
 .spin {
   animation: spin 0.9s linear infinite;
@@ -396,5 +434,40 @@ p.lead {
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   SKIP LINK — hidden until a keyboard user tabs to it (first focusable item)
+   -------------------------------------------------------------------------- */
+.skip-link {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  translate: -50% -120%;
+  z-index: 200;
+  padding: 0.7rem 1.2rem;
+  background: var(--blue);
+  color: var(--white);
+  font-weight: 600;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 8px 22px rgba(16, 31, 60, 0.28);
+  transition: translate 0.18s ease;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  translate: -50% 0;
+}
+
+/* The <main> receives focus programmatically — never show a focus ring on it. */
+#main-content:focus,
+#main-content:focus-visible {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none;
   }
 }

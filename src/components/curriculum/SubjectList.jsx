@@ -16,8 +16,7 @@ export default function SubjectList({ subjects }) {
       </div>
       <p className="subject-note">
         <Info size={15} aria-hidden="true" />
-        The subject list shown is website placeholder data based on the standard CBSE pattern. It
-        will be updated with the school’s confirmed subject combinations.
+        Subject lists are maintained by the school office and reflect the current academic session.
       </p>
     </div>
   )

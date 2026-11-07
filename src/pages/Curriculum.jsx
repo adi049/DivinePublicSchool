@@ -1,7 +1,15 @@
 import { useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { FlaskConical, Briefcase, Landmark, Info, CheckCircle2, Sparkles } from 'lucide-react'
+import {
+  FlaskConical,
+  Briefcase,
+  Landmark,
+  CheckCircle2,
+  Sparkles,
+  CalendarDays,
+  FileClock,
+} from 'lucide-react'
 import useSEO from '../hooks/useSEO.js'
 import PageHero from '../components/ui/PageHero.jsx'
 import SectionHeading from '../components/ui/SectionHeading.jsx'
@@ -9,28 +17,116 @@ import Reveal from '../components/ui/Reveal.jsx'
 import CTABand from '../components/ui/CTABand.jsx'
 import ClassTile from '../components/curriculum/ClassTile.jsx'
 import SubjectList from '../components/curriculum/SubjectList.jsx'
-import Timetable from '../components/curriculum/Timetable.jsx'
-import { CLASSES, STREAMS, TIMETABLES } from '../data/curriculum.js'
+import DocumentViewer from '../components/ui/DocumentViewer.jsx'
+import { CLASSES, STREAMS } from '../data/curriculum.js'
+import { needsStream } from '../services/catalogue.js'
+import {
+  useSubjects,
+  usePublishedTimetable,
+  usePublishedDateSheet,
+  useFileUrl,
+} from '../services/hooks.js'
 
-const STREAM_ICONS = { science: FlaskConical, commerce: Briefcase, humanities: Landmark }
+const STREAM_ICONS = { science: FlaskConical, commerce: Briefcase, arts: Landmark }
 
 const TABS = [
   { id: 'overview', label: 'Overview' },
   { id: 'subjects', label: 'Subjects' },
   { id: 'timetable', label: 'Timetable' },
+  { id: 'datesheet', label: 'Date Sheet' },
 ]
 
-export default function Curriculum() {
-  useSEO(
-    'Curriculum | Divine Public School — Classes Nursery to XII, CBSE Pattern',
-    'Class-wise CBSE curriculum of Divine Public School, Gurugram — subjects and timetables for Nursery to Class XII, including Science, Commerce and Humanities streams.',
-  )
+/* ------------------------------------------------------------------ */
+/*  Timetable tab — photograph published by the school office          */
+/* ------------------------------------------------------------------ */
+function TimetablePanel({ classId, stream }) {
+  const record = usePublishedTimetable(classId, stream)
+  const url = useFileUrl(record?.image_file_id)
 
+  if (!record) {
+    return (
+      <div className="csoon">
+        <CalendarDays size={20} aria-hidden="true" />
+        <p>
+          The class timetable will be published here soon. For the current schedule, please contact
+          the school office.
+        </p>
+      </div>
+    )
+  }
+  if (!url) return <p className="csoon">Loading timetable…</p>
+
+  return (
+    <div>
+      <p className="doc-meta">
+        <strong>{record.title}</strong>
+        {record.academic_session && <span className="tag">Session {record.academic_session}</span>}
+        {record.effective_date && <span className="tag tag--silver">Effective {record.effective_date}</span>}
+      </p>
+      <DocumentViewer
+        url={url}
+        type="image"
+        title={record.title}
+        downloadName={`timetable-${record.class_id}${record.stream ? `-${record.stream}` : ''}`}
+      />
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  Date-sheet tab — image or PDF published by the school office       */
+/* ------------------------------------------------------------------ */
+function DateSheetPanel({ classId, stream }) {
+  const record = usePublishedDateSheet(classId, stream)
+  const url = useFileUrl(record?.document_file_id)
+
+  if (!record) {
+    return (
+      <div className="csoon">
+        <FileClock size={20} aria-hidden="true" />
+        <p>Date sheet for this class will be available soon.</p>
+      </div>
+    )
+  }
+  if (!url) return <p className="csoon">Loading date sheet…</p>
+
+  const name = `${record.exam_name || 'Date Sheet'} — ${record.academic_session || ''}`.trim()
+  return (
+    <div>
+      <p className="doc-meta">
+        <strong>{record.exam_name || 'Examination Date Sheet'}</strong>
+        {record.academic_session && <span className="tag">Session {record.academic_session}</span>}
+        {record.publication_date && (
+          <span className="tag tag--magenta">Published {record.publication_date}</span>
+        )}
+      </p>
+      <DocumentViewer
+        url={url}
+        type={record.document_type === 'pdf' ? 'pdf' : 'image'}
+        title={name}
+        downloadName={`date-sheet-${record.class_id}${record.stream ? `-${record.stream}` : ''}`}
+      />
+    </div>
+  )
+}
+
+export default function Curriculum() {
   const [searchParams, setSearchParams] = useSearchParams()
   const selectedId = searchParams.get('class') || 'nursery'
   const selected = CLASSES.find((c) => c.id === selectedId) || CLASSES[0]
 
-  const [tab, setTab] = useState('overview')
+  // Deep-link support for the crawlable /timetable/ and /date-sheets/ entry
+  // pages: /#/curriculum?tab=timetable — defaults to the overview tab.
+  const requestedTab = searchParams.get('tab')
+  const [tab, setTab] = useState(() =>
+    TABS.some((t) => t.id === requestedTab) ? requestedTab : 'overview',
+  )
+
+  // Unique title/description/canonical per view — the timetable and date-sheet
+  // tabs are indexed through their own static entry pages.
+  useSEO({
+    page: tab === 'timetable' ? 'timetable' : tab === 'datesheet' ? 'date-sheets' : 'curriculum',
+  })
   const [stream, setStream] = useState('science')
   const panelRef = useRef(null)
 
@@ -48,16 +144,16 @@ export default function Curriculum() {
   // Resolve what the panel displays (handles stream-based classes)
   const isStreamClass = Boolean(selected.hasStreams)
   const activeStream = STREAMS[stream]
-  const subjects = isStreamClass ? activeStream.subjects : selected.subjects
-  const timetableKey = isStreamClass ? activeStream.timetable : selected.timetable
-  const timetable = TIMETABLES[timetableKey]
+  const streamId = needsStream(selected.id) ? stream : null
+  const subjectRecords = useSubjects(selected.id, streamId)
+  const subjects = subjectRecords.map((r) => r.subject_name)
 
   return (
     <>
       <PageHero
         title="Academic Curriculum"
-        description="Class-wise subjects, timetables and academic information from Nursery to Class XII, following the CBSE pattern."
-        image="/images/gallery/classroom.jpg"
+        description="Class-wise subjects, timetables and examination date sheets from Nursery to Class XII, following the CBSE pattern."
+        image="/images/gallery/building-front.jpg"
         crumb="Curriculum"
       />
 
@@ -67,16 +163,8 @@ export default function Curriculum() {
             <SectionHeading
               eyebrow="Classes We Offer"
               title="Class-wise curriculum"
-              sub="Select a class to view its subjects, sample timetable and stage details. Classes 11 and 12 can be explored stream-wise."
+              sub="Select a class to view its subjects, timetable and examination date sheet. Classes 11 and 12 can be explored stream-wise. Timetables and date sheets are published by the school office."
             />
-          </Reveal>
-
-          <Reveal delay={0.05}>
-            <p className="sample-note">
-              <Info size={16} aria-hidden="true" />
-              The subjects and timetables shown below are placeholder data for the website. The
-              school’s confirmed curriculum and timetables will replace them.
-            </p>
           </Reveal>
 
           {/* ------------------------------------------------ CLASS PICKER */}
@@ -107,7 +195,7 @@ export default function Curriculum() {
               <div className="panel__meta">
                 <span className="tag">{selected.stage}</span>
                 <span className="tag tag--green">Age {selected.age}</span>
-                {isStreamClass && <span className="tag tag--green">3 Streams</span>}
+                {isStreamClass && <span className="tag tag--magenta">3 Streams</span>}
               </div>
             </div>
 
@@ -115,8 +203,8 @@ export default function Curriculum() {
             {isStreamClass && (
               <>
                 <p className="panel__blurb">
-                  <strong>Choose a stream</strong> to see its subject combination and sample
-                  timetable. Students are guided before confirming a stream.
+                  <strong>Choose a stream</strong> to see its subject combination, timetable and
+                  examination date sheet. Students are guided before confirming a stream.
                 </p>
                 <div className="stream-row" role="group" aria-label="Select stream">
                   {Object.values(STREAMS).map((s) => {
@@ -152,7 +240,7 @@ export default function Curriculum() {
                   type="button"
                   role="tab"
                   aria-selected={tab === t.id}
-                  className={`tab ${tab === t.id ? 'is-active' : ''}`}
+                  className={`tab ${tab === t.id ? 'is-active' : ''} ${t.id === 'datesheet' ? 'tab--accent' : ''}`}
                   onClick={() => setTab(t.id)}
                 >
                   {t.label}
@@ -196,13 +284,25 @@ export default function Curriculum() {
                           Subjects for <strong>{activeStream.label}</strong> ({selected.label}):
                         </p>
                       )}
-                      <SubjectList subjects={subjects} />
+                      {subjects.length > 0 ? (
+                        <SubjectList subjects={subjects} />
+                      ) : (
+                        <div className="csoon">
+                          <p>Subjects for this class will be published soon.</p>
+                        </div>
+                      )}
                     </div>
                   )}
 
                   {tab === 'timetable' && (
                     <div role="tabpanel" aria-label="Timetable">
-                      <Timetable timetable={timetable} />
+                      <TimetablePanel classId={selected.id} stream={streamId} />
+                    </div>
+                  )}
+
+                  {tab === 'datesheet' && (
+                    <div role="tabpanel" aria-label="Date sheet">
+                      <DateSheetPanel classId={selected.id} stream={streamId} />
                     </div>
                   )}
                 </motion.div>

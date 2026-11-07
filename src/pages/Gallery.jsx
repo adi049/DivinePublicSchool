@@ -5,23 +5,24 @@ import PageHero from '../components/ui/PageHero.jsx'
 import Reveal from '../components/ui/Reveal.jsx'
 import GalleryGrid from '../components/gallery/GalleryGrid.jsx'
 import Lightbox from '../components/gallery/Lightbox.jsx'
-import { GALLERY_IMAGES, GALLERY_CATEGORIES } from '../data/gallery.js'
+import { GALLERY_CATEGORIES } from '../data/gallery.js'
+import { useResolvedPhotos } from '../services/hooks.js'
 
 export default function Gallery() {
-  useSEO(
-    'Gallery | Divine Public School, Vatika Kunj Extension, Gurugram',
-    'Photographs of the Divine Public School campus, classrooms, events, activities, sports and celebrations in Gurugram.',
-  )
+  useSEO({ page: 'gallery' })
 
   const [category, setCategory] = useState('All')
   const [lightboxIndex, setLightboxIndex] = useState(null)
 
+  // Official photographs + photographs added from the admin dashboard
+  const photos = useResolvedPhotos()
+
   const filtered = useMemo(
     () =>
       category === 'All'
-        ? GALLERY_IMAGES
-        : GALLERY_IMAGES.filter((img) => img.category === category),
-    [category],
+        ? photos
+        : photos.filter((img) => img.category === category),
+    [category, photos],
   )
 
   const selectCategory = (cat) => {
@@ -34,7 +35,7 @@ export default function Gallery() {
       <PageHero
         title="School Gallery"
         description="Moments from our campus — classrooms, events, sports, cultural programmes and everyday school life."
-        image="/images/gallery/annual-day.jpg"
+        image="/images/gallery/janmashtami-classroom.jpg"
         crumb="Gallery"
       />
 

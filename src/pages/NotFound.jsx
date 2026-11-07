@@ -3,10 +3,12 @@ import useSEO from '../hooks/useSEO.js'
 import Button from '../components/ui/Button.jsx'
 
 export default function NotFound() {
-  useSEO(
-    'Page Not Found | Divine Public School, Gurugram',
-    'The page you are looking for could not be found on the Divine Public School website.',
-  )
+  useSEO({
+    title: 'Page Not Found (404) | Divine Public School, Gurugram',
+    description:
+      'The page you are looking for could not be found on the Divine Public School website. Use the links below to return to the homepage or contact the school office.',
+    noindex: true, // 404s must never be indexed
+  })
 
   return (
     <section className="nf">

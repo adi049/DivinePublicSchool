@@ -10,7 +10,9 @@ import { SCHOOL } from '../data/school.js'
  */
 
 function LegalPage({ title, seoTitle, seoDesc, children }) {
-  useSEO(seoTitle, seoDesc)
+  // Placeholder policy text until the school approves its own — keep these
+  // out of the index so they cannot rank ahead of real school pages.
+  useSEO({ title: seoTitle, description: seoDesc, noindex: true })
   return (
     <>
       <PageHero title={title} image="/images/about-building.jpg" crumb={title} />
@@ -69,8 +71,9 @@ export function PrivacyPolicy() {
 
       <p>
         <em>
-          (This is placeholder policy text for the website. The school administration will publish
-          its detailed, approved policy here.)
+          This page gives a general summary while the school finalises its formal, approved privacy
+          policy. If you have any question about how your information is handled, please contact the
+          school office — the details are on our Contact page.
         </em>
       </p>
     </LegalPage>
@@ -121,8 +124,9 @@ export function TermsConditions() {
 
       <p>
         <em>
-          (This is placeholder terms text for the website. The school administration will publish
-          its detailed, approved terms here.)
+          This page gives a general summary while the school finalises its formal, approved terms.
+          For anything that is not covered here, please contact the school office — the details are
+          on our Contact page.
         </em>
       </p>
     </LegalPage>

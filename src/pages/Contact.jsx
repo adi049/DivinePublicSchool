@@ -9,17 +9,14 @@ import EnquiryForm from '../components/forms/EnquiryForm.jsx'
 import { SCHOOL } from '../data/school.js'
 
 export default function Contact() {
-  useSEO(
-    'Contact Us | Divine Public School, Vatika Kunj Extension, Gurugram',
-    'Contact Divine Public School, Vatika Kunj Extension, Gurugram — call 9953275511 / 9999789418, email divinepublicschool2003@gmail.com, message us on WhatsApp or get directions.',
-  )
+  useSEO({ page: 'contact' })
 
   return (
     <>
       <PageHero
         title="Contact Us"
         description="Questions about admissions, classes or anything else? Call us, message us on WhatsApp, or send an enquiry below."
-        image="/images/gallery/campus-front.jpg"
+        image="/images/gallery/playground-transport.jpg"
         crumb="Contact Us"
       />
 
@@ -32,7 +29,7 @@ export default function Contact() {
                 <span className="c-card__icon">
                   <Phone size={22} aria-hidden="true" />
                 </span>
-                <h3>Call the School Office</h3>
+                <h2>Call the School Office</h2>
                 <p>
                   {SCHOOL.phones.map((p) => (
                     <span key={p.display}>
@@ -51,7 +48,7 @@ export default function Contact() {
                 <span className="c-card__icon">
                   <MessageCircle size={22} aria-hidden="true" />
                 </span>
-                <h3>Chat on WhatsApp</h3>
+                <h2>Chat on WhatsApp</h2>
                 <p>{SCHOOL.whatsapp.display}</p>
                 <Button
                   href={SCHOOL.whatsapp.url}
@@ -70,7 +67,7 @@ export default function Contact() {
                 <span className="c-card__icon">
                   <Mail size={22} aria-hidden="true" />
                 </span>
-                <h3>Email Us</h3>
+                <h2>Email Us</h2>
                 <p>
                   <a href={SCHOOL.email.href}>{SCHOOL.email.display}</a>
                 </p>
@@ -84,7 +81,7 @@ export default function Contact() {
                 <span className="c-card__icon">
                   <MapPin size={22} aria-hidden="true" />
                 </span>
-                <h3>Visit the Campus</h3>
+                <h2>Visit the Campus</h2>
                 <p>{SCHOOL.address}</p>
                 <Button href={SCHOOL.mapsUrl} target="_blank" rel="noreferrer" variant="outline" block icon={Navigation}>
                   Get Directions
@@ -100,7 +97,7 @@ export default function Contact() {
         <div className="container contact-page-grid">
           <Reveal>
             <div className="form-card">
-              <h3 id="enquiry-heading">Send us an enquiry</h3>
+              <h2 id="enquiry-heading">Send us an enquiry</h2>
               <p className="form-card__sub">
                 Fill in the details below and the school office will get back to you.
               </p>
@@ -110,7 +107,7 @@ export default function Contact() {
 
           <Reveal delay={0.1} className="side-stack">
             <div className="side-card">
-              <h3>School office</h3>
+              <h2>School office</h2>
               <ul className="info-list">
                 <li>
                   <span className="info-list__icon">

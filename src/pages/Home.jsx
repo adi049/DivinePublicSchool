@@ -1,3 +1,4 @@
+import { assetUrl } from '../utils/assetUrl.js'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
@@ -16,14 +17,14 @@ import SectionHeading from '../components/ui/SectionHeading.jsx'
 import DirectorCard from '../components/ui/DirectorCard.jsx'
 import CTABand from '../components/ui/CTABand.jsx'
 import MapPlaceholder from '../components/ui/MapPlaceholder.jsx'
+import EventPopup from '../components/ui/EventPopup.jsx'
 import { SCHOOL, WHY_CHOOSE } from '../data/school.js'
-import { GALLERY_IMAGES } from '../data/gallery.js'
-import { ASSETS } from '../data/assets.js'
+import { useResolvedPhotos } from '../services/hooks.js'
 
 const HERO_EASE = [0.22, 1, 0.36, 1]
 
 const STAGE_ROWS = [
-  { name: 'Pre-Primary', range: 'Nursery · LKG · UKG' },
+  { name: 'Pre-Primary', range: 'Nursery · KG · EKG' },
   { name: 'Primary', range: 'Classes 1 – 5' },
   { name: 'Middle School', range: 'Classes 6 – 8' },
   { name: 'Secondary', range: 'Classes 9 – 10' },
@@ -31,22 +32,24 @@ const STAGE_ROWS = [
 ]
 
 export default function Home() {
-  useSEO(
-    'Divine Public School | CBSE School in Vatika Kunj Extension, Gurugram',
-    'Divine Public School is a CBSE-curriculum school on Nayagaon Rd, Vatika Kunj Extension, Gurugram, offering classes from Nursery to Class XII. Admission enquiries welcome for 2026–27.',
-  )
+  useSEO({ page: 'home' })
 
-  const lifePreview = GALLERY_IMAGES.slice(0, 6)
+  const lifePreview = useResolvedPhotos().slice(0, 6)
 
   return (
     <>
+      {/* Admin-published event / announcement posters (nothing renders when
+          there are no active events). */}
+      <EventPopup />
+
       {/* ------------------------------------------------------------ HERO */}
       <section className="hero">
         <div className="hero__bg">
           <img
-            src={ASSETS.heroCampus}
+            src={assetUrl('images/hero-campus.jpg')}
             alt="Campus of Divine Public School, Gurugram"
             fetchpriority="high"
+            loading="eager"
             decoding="async"
           />
         </div>
@@ -157,8 +160,8 @@ export default function Home() {
         <div className="container split">
           <Reveal className="split__media">
             <img
-              src={ASSETS.aboutBuilding}
-              alt="Front facade of Divine Public School"
+              src={assetUrl('images/campus-entrance.jpg')}
+              alt="Main entrance of Divine Public School — covered canopy with the school signboard"
               loading="lazy"
               decoding="async"
             />

@@ -1,44 +1,70 @@
-import { ASSETS } from './assets.js'
+// ============================================================
+// GALLERY DATA  —  EDITABLE
+// ============================================================
+// Photographs sourced from the official school website
 
-export const GALLERY_CATEGORIES = ['Campus','Classrooms','Events','Activities','Sports','Cultural Programs','Celebrations','Students','Other']
+import { assetUrl } from '../utils/assetUrl.js'
+// (divinepublicschoolgurgaon.com) and stored locally in
+// /public/images/gallery/. To add or replace photographs, place
+// the file in that folder and update the entries below.
+// `category` must be one of the values in GALLERY_CATEGORIES.
+// ============================================================
 
-const IMAGE_ASSETS = {
-  'campus-front.jpg': ASSETS.gallery.campusFront,
-  'library.jpg': ASSETS.gallery.library,
-  'classroom.jpg': ASSETS.gallery.classroom,
-  'classroom-activity.jpg': ASSETS.gallery.classroomActivity,
-  'annual-day.jpg': ASSETS.gallery.annualDay,
-  'science-exhibition.jpg': ASSETS.gallery.scienceExhibition,
-  'art-craft.jpg': ASSETS.gallery.artCraft,
-  'music-class.jpg': ASSETS.gallery.musicClass,
-  'football.jpg': ASSETS.gallery.football,
-  'sports-day.jpg': ASSETS.gallery.sportsDay,
-  'cultural-dance.jpg': ASSETS.gallery.culturalDance,
-  'independence-day.jpg': ASSETS.gallery.independenceDay,
-  'students-group.jpg': ASSETS.gallery.studentsGroup,
-  'morning-assembly.jpg': ASSETS.gallery.morningAssembly,
-}
-
-const image = (name, caption, alt, category) => ({
-  src: IMAGE_ASSETS[name],
-  caption,
-  alt,
-  category,
-})
+export const GALLERY_CATEGORIES = ['Campus', 'Infrastructure', 'Celebrations']
 
 export const GALLERY_IMAGES = [
-  image('campus-front.jpg','The school campus on a working morning','Front view of the Divine Public School campus with students walking in','Campus'),
-  image('library.jpg','Quiet reading time in the school library','Students reading books in the school library','Campus'),
-  image('classroom.jpg','A lesson in progress','Teacher explaining a lesson on the board in a classroom','Classrooms'),
-  image('classroom-activity.jpg','Hands up — an eager classroom activity','Primary school students raising hands during a classroom activity','Classrooms'),
-  image('annual-day.jpg','Annual Day stage performance','Students in costume performing on stage at the annual day','Events'),
-  image('science-exhibition.jpg','Science exhibition — learning by doing','Students presenting models at the school science exhibition','Events'),
-  image('art-craft.jpg','Art & craft period in the junior wing','Junior students painting during art and craft period','Activities'),
-  image('music-class.jpg','Music class','Students learning instruments during a music class','Activities'),
-  image('football.jpg','Football practice on the school ground','Students playing football on the school sports ground','Sports'),
-  image('sports-day.jpg','Race day — annual sports meet','Students running a race during the annual sports day','Sports'),
-  image('cultural-dance.jpg','Classical dance at a cultural programme','Student performing classical dance at a school cultural programme','Cultural Programs'),
-  image('independence-day.jpg','Independence Day celebrations','Independence Day celebration with the national flag on campus','Celebrations'),
-  image('students-group.jpg','Between classes — our senior students','Group of students in uniform walking along the school corridor','Students'),
-  image('morning-assembly.jpg','The morning assembly','Students standing in rows during the morning assembly','Other'),
+  {
+    src: assetUrl('/images/gallery/building-front.jpg'),
+    caption: 'The main academic block of the school',
+    alt: 'Main academic building of Divine Public School, Gurugram',
+    category: 'Campus',
+  },
+  {
+    src: assetUrl('/images/gallery/building-main.jpg'),
+    caption: 'The school building and covered entrance canopy',
+    alt: 'Wide view of the Divine Public School building with entrance canopy',
+    category: 'Campus',
+  },
+  {
+    src: assetUrl('/images/gallery/campus-lawn.jpg'),
+    caption: 'The school lawn and covered walkway',
+    alt: 'Lawn and covered walkway on the Divine Public School campus',
+    category: 'Campus',
+  },
+  {
+    src: assetUrl('/images/campus-entrance.jpg'),
+    caption: 'The covered main entrance with the school signboard',
+    alt: 'Covered entrance canopy and main doorway of Divine Public School',
+    category: 'Campus',
+  },
+  {
+    src: assetUrl('/images/gallery/playground-transport.jpg'),
+    caption: 'School transport and the play area',
+    alt: 'School buses parked beside the play area at Divine Public School',
+    category: 'Infrastructure',
+  },
+  {
+    src: assetUrl('/images/gallery/courtyard-play-area.jpg'),
+    caption: 'The courtyard garden and swings',
+    alt: 'School courtyard with potted plants, swings and a school bus',
+    category: 'Infrastructure',
+  },
+  {
+    src: assetUrl('/images/gallery/janmashtami-matki-1.jpg'),
+    caption: 'Janmashtami celebrations — matki activity',
+    alt: 'Students in traditional dress during Janmashtami matki activity at school',
+    category: 'Celebrations',
+  },
+  {
+    src: assetUrl('/images/gallery/janmashtami-matki-2.jpg'),
+    caption: 'Our little Radhas and Krishnas on Janmashtami',
+    alt: 'Young students dressed in festive attire for Janmashtami',
+    category: 'Celebrations',
+  },
+  {
+    src: assetUrl('/images/gallery/janmashtami-classroom.jpg'),
+    caption: 'Class group on Janmashtami',
+    alt: 'Class group photograph in a decorated classroom on Janmashtami',
+    category: 'Celebrations',
+  },
 ]
