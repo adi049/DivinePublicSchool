@@ -39,7 +39,8 @@ function ScrollToTop() {
 
 /** Admin routes render only after PIN verification. */
 function RequireAuth() {
-  const { authenticated } = useAdminAuth()
+  const { authenticated, loading } = useAdminAuth()
+  if (loading) return <div className="access"><div className="access__card">Checking secure admin session…</div></div>
   if (!authenticated) return <Navigate to="/admin" replace />
   return <AdminLayout />
 }
