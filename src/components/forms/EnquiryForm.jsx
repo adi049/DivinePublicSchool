@@ -3,6 +3,7 @@ import { Send, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react'
 import Button from '../ui/Button.jsx'
 import { CLASS_OPTIONS } from '../../data/curriculum.js'
 import { SCHOOL } from '../../data/school.js'
+import { supabaseRequest } from '../../services/supabaseClient.js'
 
 /**
  * Enquiry form — used on the Contact page (variant="contact") and the
@@ -31,6 +32,7 @@ export default function EnquiryForm({ variant = 'contact' }) {
   const [errors, setErrors] = useState({})
   const [sending, setSending] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [sendError, setSendError] = useState('')
 
   const fields = [
     {
@@ -109,7 +111,7 @@ export default function EnquiryForm({ variant = 'contact' }) {
     setErrors((err) => ({ ...err, [name]: validateField(name, value) }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const nextErrors = {}
     fields.forEach((f) => {
@@ -118,13 +120,29 @@ export default function EnquiryForm({ variant = 'contact' }) {
     })
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
-
-    // TODO(backend integration): POST `values` to the school's enquiry endpoint here.
     setSending(true)
-    window.setTimeout(() => {
-      setSending(false)
+    setSendError('')
+    try {
+      await supabaseRequest('rest/v1/enquiries', {
+        method: 'POST',
+        body: {
+          parent_name: values.parentName.trim(),
+          student_name: values.studentName.trim() || null,
+          phone: values.phone.replace(/\D/g, '').slice(-10),
+          email: values.email.trim(),
+          class_interested: values.classInterested,
+          message: values.message.trim() || null,
+          enquiry_type: isAdmission ? 'admissions' : 'contact',
+          status: 'new',
+        },
+        prefer: 'return=minimal',
+      })
       setSubmitted(true)
-    }, 900)
+    } catch (err) {
+      setSendError(err.message || 'Your enquiry could not be sent. Please call the school office.')
+    } finally {
+      setSending(false)
+    }
   }
 
   const handleReset = () => {
@@ -213,6 +231,7 @@ export default function EnquiryForm({ variant = 'contact' }) {
         ))}
       </div>
 
+      {sendError && <p className="field__err" role="alert">{sendError}</p>}
       <div className="form-foot">
         <Button type="submit" variant="primary" icon={sending ? undefined : Send} disabled={sending}>
           {sending ? (
