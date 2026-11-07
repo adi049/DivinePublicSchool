@@ -20,9 +20,9 @@ export function getSettings() {
   return stored ? { ...DEFAULTS, ...stored, announcement: { ...DEFAULTS.announcement, ...stored.announcement } } : DEFAULTS
 }
 
-export function saveSettings(patch) {
+export async function saveSettings(patch) {
   const next = { ...getSettings(), ...patch, updated_at: nowISO() }
-  saveRecords(KEY, next)
+  await saveRecords(KEY, next)
   emitContentChanged()
   return next
 }
