@@ -1,12 +1,12 @@
 // ============================================================================
 // TIMETABLE SERVICE — CRUD over class timetables (photo-based)
 // ============================================================================
-// Record shape (matches the future Supabase `timetables` table):
+// Record shape matches the Supabase `timetables` table:
 //   id              string
 //   class_id        string   — from catalogue.CLASS_LIST
 //   stream          string|null — 'science' | 'commerce' | 'arts'
 //   title           string
-//   image_file_id   string   — key of the photo blob in localStore (→ Supabase Storage path later)
+//   image_file_id   string   — object path in the Supabase Storage bucket
 //   academic_session string  — e.g. '2026–27'
 //   effective_date  string   — ISO date the timetable applies from / was last updated for
 //   published       boolean
