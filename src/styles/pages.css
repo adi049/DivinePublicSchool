@@ -701,3 +701,167 @@
 .life-more:hover {
   color: var(--magenta);
 }
+
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS PATCH — prevent horizontal overflow and clipping
+   ========================================================================== */
+@media (max-width: 760px) {
+  html, body, #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 100%;
+    padding-inline: 18px;
+  }
+
+  .hero {
+    width: 100%;
+    min-height: 0;
+  }
+
+  .hero__inner {
+    width: 100%;
+    max-width: 100%;
+    padding: 76px 0 104px;
+  }
+
+  .hero h1 {
+    max-width: 100%;
+    font-size: clamp(2.15rem, 9vw, 3.2rem);
+    line-height: 1.12;
+    overflow-wrap: anywhere;
+  }
+
+  .hero__badge {
+    max-width: 100%;
+    white-space: normal;
+    flex-wrap: wrap;
+    font-size: 0.76rem;
+    line-height: 1.45;
+  }
+
+  .hero__headline,
+  .hero__lead {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  .hero__cta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    gap: 0.7rem;
+  }
+
+  .hero__cta .btn {
+    width: 100%;
+    min-width: 0;
+    white-space: normal;
+    min-height: 48px;
+  }
+
+  .strip {
+    margin-top: -38px;
+  }
+
+  .strip__card {
+    width: 100%;
+  }
+
+  .split,
+  .contact-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+  }
+
+  .split > *,
+  .contact-grid > *,
+  .why-grid > *,
+  .life-grid > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .split__media {
+    width: 100%;
+  }
+
+  .split__media img {
+    width: 100%;
+    height: auto;
+    max-height: 360px;
+    object-fit: cover;
+  }
+
+  .life-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stage-row,
+  .why-card,
+  .value-card {
+    min-width: 0;
+  }
+
+  .stage-row__range,
+  .info-list__value {
+    overflow-wrap: anywhere;
+  }
+
+  .section {
+    padding-block: 48px;
+  }
+
+  .sec-head {
+    max-width: 100%;
+  }
+
+  .sec-head__sub {
+    overflow-wrap: break-word;
+  }
+
+  .btn {
+    max-width: 100%;
+  }
+
+  .director-card,
+  .director-card * {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .container {
+    padding-inline: 16px;
+  }
+
+  .hero__inner {
+    padding-top: 64px;
+    padding-bottom: 92px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 9.5vw, 2.65rem);
+  }
+
+  .hero__headline {
+    font-size: 1.08rem;
+  }
+
+  .hero__lead {
+    font-size: 0.94rem;
+  }
+
+  .life-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .strip__item {
+    padding: 1rem;
+  }
+}
