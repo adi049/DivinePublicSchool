@@ -4,8 +4,8 @@
 // • Official photographs bundled with the site are NEVER deletable from the
 //   admin panel — they can only be hidden (the school asked that existing
 //   photos stay intact).
-// • Admin-added photos are stored as blobs + records and can be added, hidden
-//   or deleted. Shape mirrors a future Supabase `gallery_photos` table.
+// • Admin-added photos and their metadata are stored in Supabase Storage/Database.
+// • localStorage is only a browser cache synchronized with Supabase.
 // ============================================================================
 
 import { loadRecords, saveRecords, hasKey, putFile, deleteFile, getFileUrl, newId, nowISO } from './localStore.js'
