@@ -66,12 +66,13 @@ function mirrorRecords(key, nextRows, previousRows) {
   })
   syncQueues.set(key, task)
   task.catch(error => console.error(`[Supabase] ${config.table} sync failed:`, error))
+  return task
 }
 
 export function saveRecords(key, value) {
   const oldValue = loadRecords(key, Array.isArray(value) ? [] : null)
   localStorage.setItem(LS_PREFIX + key, JSON.stringify(value))
-  mirrorRecords(key, rowsFor(key, value), rowsFor(key, oldValue))
+  return mirrorRecords(key, rowsFor(key, value), rowsFor(key, oldValue))
 }
 
 let dbPromise = null
