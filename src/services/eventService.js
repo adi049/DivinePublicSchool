@@ -31,12 +31,12 @@ function readAll() {
   return loadRecords(KEY, [])
 }
 
-function persist(records) {
+async function persist(records) {
   // always store normalised + ordered
   const ordered = [...records]
     .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))
     .map((r, i) => ({ ...r, display_order: i }))
-  saveRecords(KEY, ordered)
+  await saveRecords(KEY, ordered)
   emitContentChanged()
   return ordered
 }
@@ -162,7 +162,7 @@ export async function createEvent({
     created_at: nowISO(),
     updated_at: nowISO(),
   }
-  persist([...all, record])
+  await persist([...all, record])
   return record
 }
 
@@ -195,7 +195,7 @@ export async function updateEvent(id, patch = {}, file = null) {
     image_file_id: imageFileId,
     updated_at: nowISO(),
   }
-  persist(all.map((e) => (e.id === id ? next : e)))
+  await persist(all.map((e) => (e.id === id ? next : e)))
   return next
 }
 
@@ -205,30 +205,30 @@ export async function deleteEvent(id) {
   const existing = all.find((e) => e.id === id)
   if (!existing) return false
   if (existing.image_file_id) await deleteFile(existing.image_file_id)
-  persist(all.filter((e) => e.id !== id))
+  await persist(all.filter((e) => e.id !== id))
   return true
 }
 
-export function setPublished(id, published) {
+export async function setPublished(id, published) {
   const all = readAll()
-  persist(
+  await persist(
     all.map((e) => (e.id === id ? { ...e, published: Boolean(published), updated_at: nowISO() } : e)),
   )
 }
 
-export function setActive(id, active) {
+export async function setActive(id, active) {
   const all = readAll()
-  persist(all.map((e) => (e.id === id ? { ...e, active: Boolean(active), updated_at: nowISO() } : e)))
+  await persist(all.map((e) => (e.id === id ? { ...e, active: Boolean(active), updated_at: nowISO() } : e)))
 }
 
 /** Move an event up/down in the popup order. dir = -1 (up) | +1 (down). */
-export function moveEvent(id, dir) {
+export async function moveEvent(id, dir) {
   const ordered = listEvents()
   const i = ordered.findIndex((e) => e.id === id)
   const j = i + dir
   if (i === -1 || j < 0 || j >= ordered.length) return false
   ;[ordered[i], ordered[j]] = [ordered[j], ordered[i]]
-  persist(ordered.map((e, idx) => ({ ...e, display_order: idx })))
+  await persist(ordered.map((e, idx) => ({ ...e, display_order: idx })))
   return true
 }
 
