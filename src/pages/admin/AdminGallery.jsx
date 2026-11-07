@@ -2,8 +2,8 @@
 // ADMIN — GALLERY MANAGEMENT
 // ============================================================================
 // Official site photographs are protected (can be hidden, not deleted).
-// Admin-added photographs live in local storage and can be added, hidden
-// and deleted. Changes reach the public Gallery instantly.
+// Admin-added photographs are stored in Supabase Storage with their records in the
+// Supabase Database. Photos can be added, hidden and deleted. Changes reach the public Gallery.
 // ============================================================================
 
 import { useEffect, useState } from 'react'
