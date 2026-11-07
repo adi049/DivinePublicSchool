@@ -1,7 +1,7 @@
 // ============================================================================
 // SETTINGS SERVICE — small site-wide switches managed from the dashboard
 // ============================================================================
-// Mirrors a future Supabase `site_settings` row. Kept deliberately small:
+// Persists the announcement in Supabase `site_settings`; localStorage is a cache.
 //   announcement: { enabled, text } — a royal-theme banner above the navbar.
 // ============================================================================
 
