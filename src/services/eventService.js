@@ -1,23 +1,8 @@
 // ============================================================================
 // EVENT SERVICE — admin-managed events / announcements + homepage popup
-// ============================================================================
-// Record shape mirrors the planned Supabase `events` table 1:1:
+// Supabase Database stores event records; Supabase Storage stores poster files.
+// localStorage is used only as a fast browser cache and is hydrated from Supabase.
 //
-//   id            text (pk)        title          text
-//   description   text             image_url      text   (Supabase Storage)
-//   image_file_id text (local)     button_text    text
-//   button_url    text             start_date     date  (YYYY-MM-DD, nullable)
-//   expiry_date   date (nullable)  published      boolean
-//   active        boolean          display_order  integer
-//   created_at    timestamptz      updated_at     timestamptz
-//
-// STORAGE (temporary, until Supabase is connected)
-//   • the record row        → localStorage  (small JSON, via localStore)
-//   • the poster image file → IndexedDB     (Blob — never Base64 in
-//                                            localStorage, by design)
-//
-// ⚠️  Everything here lives in THIS browser only. Events published on one
-//     device are not visible to other visitors until Supabase is connected.
 // ============================================================================
 
 import {
@@ -105,10 +90,10 @@ export function listLiveEvents(today = todayISO()) {
   )
 }
 
-/** Resolve a poster to a displayable URL (local blob now, Supabase URL later). */
+/** Resolve a poster to its shared Supabase Storage URL. */
 export function eventImageUrl(ev) {
   if (!ev) return Promise.resolve(null)
-  if (ev.image_url) return Promise.resolve(ev.image_url) // future Supabase Storage
+  if (ev.image_url) return Promise.resolve(ev.image_url)
   return getFileUrl(ev.image_file_id)
 }
 
@@ -166,7 +151,7 @@ export async function createEvent({
     title: String(title).trim(),
     description: String(description).trim(),
     image_file_id: imageFileId,
-    image_url: null, // populated by Supabase Storage later
+    image_url: null, // Storage path is resolved from image_file_id
     button_text: String(button_text).trim(),
     button_url: String(button_url).trim(),
     start_date: start_date || null,
