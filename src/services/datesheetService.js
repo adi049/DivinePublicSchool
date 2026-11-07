@@ -24,8 +24,8 @@ function all() {
   return loadRecords(KEY, [])
 }
 
-function persist(records) {
-  saveRecords(KEY, records)
+async function persist(records) {
+  await saveRecords(KEY, records)
   emitContentChanged()
 }
 
@@ -82,19 +82,19 @@ export async function saveDateSheet(input) {
   }
 
   const next = existing ? records.map((r) => (r.id === existing.id ? record : r)) : [...records, record]
-  persist(next)
+  await persist(next)
   return record
 }
 
-export function setDateSheetPublished(id, published) {
+export async function setDateSheetPublished(id, published) {
   const records = all().map((r) => (r.id === id ? { ...r, published, updated_at: nowISO() } : r))
-  persist(records)
+  await persist(records)
 }
 
 export async function deleteDateSheet(id) {
   const record = all().find((r) => r.id === id)
   if (record?.document_file_id) await deleteFile(record.document_file_id)
-  persist(all().filter((r) => r.id !== id))
+  await persist(all().filter((r) => r.id !== id))
 }
 
 export function dateSheetDocumentUrl(record) {
