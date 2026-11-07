@@ -23,9 +23,10 @@ function hiddenIds() {
   return hasKey(HIDDEN_KEY) ? loadRecords(HIDDEN_KEY, []) : []
 }
 
-function persist(records, hidden) {
-  saveRecords(KEY, records)
-  saveRecords(HIDDEN_KEY, hidden)
+async function persist(records, hidden) {
+  // Wait for both Supabase writes so the UI never reports success before the
+  // shared database confirms the photo metadata and visibility state.
+  await Promise.all([saveRecords(KEY, records), saveRecords(HIDDEN_KEY, hidden)])
   emitContentChanged()
 }
 
@@ -75,16 +76,17 @@ export async function addPhoto({ file, caption, category }) {
     category,
     created_at: nowISO(),
     updated_at: nowISO(),
+    hidden: false,
   }
-  persist([...added(), record], hiddenIds())
+  await persist([...added(), record], hiddenIds())
   return record
 }
 
 /** Hide or show any photo (official photos can be hidden, not deleted). */
-export function setPhotoHidden(uid, hidden) {
+export async function setPhotoHidden(uid, hidden) {
   const list = hiddenIds()
   const next = hidden ? [...new Set([...list, uid])] : list.filter((id) => id !== uid)
-  persist(added(), next)
+  await persist(added(), next)
 }
 
 /** Delete an admin-added photo and its file. Official photos cannot be deleted. */
@@ -92,7 +94,7 @@ export async function deletePhoto(uid) {
   const record = added().find((r) => r.id === uid)
   if (!record) return false // official photo ids aren't deletable
   await deleteFile(record.image_file_id)
-  persist(
+  await persist(
     added().filter((r) => r.id !== uid),
     hiddenIds().filter((id) => id !== uid),
   )
