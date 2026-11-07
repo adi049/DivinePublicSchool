@@ -129,10 +129,14 @@ export default function AdminTimetables() {
     }
   }
 
-  const togglePublish = () => {
-    setTimetablePublished(existing.id, !existing.published)
-    toast.success(existing.published ? 'Timetable unpublished (hidden from website).' : 'Timetable published.')
-    setTick((t) => t + 1)
+  const togglePublish = async () => {
+    try {
+      await setTimetablePublished(existing.id, !existing.published)
+      toast.success(existing.published ? 'Timetable unpublished (hidden from website).' : 'Timetable published.')
+      setTick((t) => t + 1)
+    } catch (error) {
+      toast.error(error.message || 'Could not update timetable publishing status.')
+    }
   }
 
   return (
