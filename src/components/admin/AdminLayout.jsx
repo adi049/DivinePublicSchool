@@ -15,6 +15,7 @@ import {
   FileClock,
   Images,
   Megaphone,
+  Inbox,
   Settings,
   LogOut,
   Menu,
@@ -33,6 +34,7 @@ const NAV = [
   { to: '/admin/date-sheets', label: 'Date Sheets', icon: FileClock },
   { to: '/admin/gallery', label: 'Gallery Management', icon: Images },
   { to: '/admin/events', label: 'Manage Events & Announcements', icon: Megaphone },
+  { to: '/admin/enquiries', label: 'Website Enquiries', icon: Inbox },
   { to: '/admin/settings', label: 'Website Settings', icon: Settings },
 ]
 
