@@ -594,9 +594,7 @@ export default function AdminEvents() {
       </section>
 
       <p className="admin-note">
-        Events are stored in this browser (records in localStorage, poster images in IndexedDB) as a
-        temporary persistence layer, so they appear on the homepage of this device only. Connecting
-        Supabase Database + Storage will publish them to every visitor.
+        Events and poster images are synchronized with Supabase Database + Storage. Published events are shared with every website visitor.
       </p>
 
       <ConfirmDialog
