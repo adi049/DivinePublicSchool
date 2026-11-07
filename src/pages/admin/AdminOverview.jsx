@@ -143,9 +143,7 @@ export default function AdminOverview() {
       </section>
 
       <p className="admin-note">
-        Content saved here is stored in this browser (localStorage + IndexedDB) as a temporary
-        persistence layer and appears on the public pages of this device immediately. Supabase
-        database + storage will replace it for multi-device publishing.
+        Content records are synchronized to Supabase Database. Uploaded media is stored in Supabase Storage, so published updates are shared across devices.
       </p>
     </div>
   )
