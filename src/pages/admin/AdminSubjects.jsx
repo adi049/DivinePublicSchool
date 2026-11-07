@@ -23,6 +23,7 @@ export default function AdminSubjects() {
   const [newName, setNewName] = useState('')
   const [removeIndex, setRemoveIndex] = useState(null)
   const [tick, setTick] = useState(0)
+  const [saving, setSaving] = useState(false)
 
   const saved = useMemo(
     () => listSubjectNames(combo.classId, needsStream(combo.classId) ? combo.stream : null),
@@ -59,17 +60,20 @@ export default function AdminSubjects() {
     setNewName('')
   }
 
-  const handleSave = () => {
-    if (names.length === 0) {
-      toast.error('Add at least one subject before saving.')
+  const handleSave = async () => {
+    if (names.length === 0 || saving) {
+      if (names.length === 0) toast.error('Add at least one subject before saving.')
       return
     }
+    setSaving(true)
     try {
-      replaceSubjects(combo.classId, needsStream(combo.classId) ? combo.stream : null, names)
+      await replaceSubjects(combo.classId, needsStream(combo.classId) ? combo.stream : null, names)
       setTick((t) => t + 1)
       toast.success(`Subjects for ${label} saved — live on the website now.`)
-    } catch {
-      toast.error('Could not save subjects. Please try again.')
+    } catch (error) {
+      toast.error(error.message || 'Could not save subjects. Please try again.')
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -154,8 +158,8 @@ export default function AdminSubjects() {
         </div>
 
         <div className="aform__actions">
-          <button type="button" className="btn btn--green" onClick={handleSave} disabled={!dirty}>
-            <Save size={15} aria-hidden="true" /> Save changes
+          <button type="button" className="btn btn--green" onClick={handleSave} disabled={!dirty || saving}>
+            <Save size={15} aria-hidden="true" /> {saving ? 'Saving…' : 'Save changes'}
           </button>
           <button
             type="button"
