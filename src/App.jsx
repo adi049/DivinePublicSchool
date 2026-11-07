@@ -19,6 +19,7 @@ import AdminDateSheets from './pages/admin/AdminDateSheets.jsx'
 import AdminGallery from './pages/admin/AdminGallery.jsx'
 import AdminEvents from './pages/admin/AdminEvents.jsx'
 import AdminSettings from './pages/admin/AdminSettings.jsx'
+import AdminEnquiries from './pages/admin/AdminEnquiries.jsx'
 import { useAdminAuth } from './context/AdminAuthContext.jsx'
 
 /** Scrolls to top on route change — or to an anchor when a hash is present. */
@@ -73,6 +74,7 @@ export default function App() {
           <Route path="/admin/date-sheets" element={<AdminDateSheets />} />
           <Route path="/admin/gallery" element={<AdminGallery />} />
           <Route path="/admin/events" element={<AdminEvents />} />
+          <Route path="/admin/enquiries" element={<AdminEnquiries />} />
           <Route path="/admin/settings" element={<AdminSettings />} />
         </Route>
       </Routes>
