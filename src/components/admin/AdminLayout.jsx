@@ -174,7 +174,7 @@ export default function AdminLayout() {
           <header className="admin-head">
             <h1>{current?.label || 'Overview'}</h1>
             <span className="admin-head__chip">
-              Temporary local admin · Supabase auth connects later
+              Supabase connected · Shared school data
             </span>
           </header>
           <main className="admin-body">
