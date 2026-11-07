@@ -1791,3 +1791,40 @@
     justify-content: flex-end;
   }
 }
+
+
+/* ------------------------------------------------------ website settings */
+.settings-account {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--blue-50);
+  color: var(--ink);
+}
+.settings-account > svg {
+  flex: 0 0 auto;
+  color: var(--blue);
+}
+.settings-account > div {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+  flex: 1;
+}
+.settings-account strong {
+  font-size: 0.82rem;
+}
+.settings-account span {
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+.settings-account .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
