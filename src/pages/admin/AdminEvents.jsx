@@ -401,14 +401,30 @@ export default function AdminEvents() {
     }
   }
 
-  const togglePublish = (ev) => {
-    setPublished(ev.id, !ev.published)
-    toast.success(ev.published ? 'Event unpublished.' : 'Event published to the homepage.')
+  const togglePublish = async (ev) => {
+    try {
+      await setPublished(ev.id, !ev.published)
+      toast.success(ev.published ? 'Event unpublished.' : 'Event published to the homepage.')
+    } catch (error) {
+      toast.error(error.message || 'Could not update event publishing status.')
+    }
   }
 
-  const toggleActive = (ev) => {
-    setActive(ev.id, !ev.active)
-    toast.success(ev.active ? 'Event set to inactive.' : 'Event set to active.')
+  const toggleActive = async (ev) => {
+    try {
+      await setActive(ev.id, !ev.active)
+      toast.success(ev.active ? 'Event set to inactive.' : 'Event set to active.')
+    } catch (error) {
+      toast.error(error.message || 'Could not update event status.')
+    }
+  }
+
+  const handleMove = async (id, direction) => {
+    try {
+      await moveEvent(id, direction)
+    } catch (error) {
+      toast.error(error.message || 'Could not save event order.')
+    }
   }
 
   return (
@@ -490,7 +506,7 @@ export default function AdminEvents() {
                           <button
                             type="button"
                             className="evt-order__btn"
-                            onClick={() => moveEvent(ev.id, -1)}
+                            onClick={() => handleMove(ev.id, -1)}
                             disabled={i === 0}
                             aria-label={`Move ${ev.title} up`}
                           >
@@ -500,7 +516,7 @@ export default function AdminEvents() {
                           <button
                             type="button"
                             className="evt-order__btn"
-                            onClick={() => moveEvent(ev.id, 1)}
+                            onClick={() => handleMove(ev.id, 1)}
                             disabled={i === events.length - 1}
                             aria-label={`Move ${ev.title} down`}
                           >
