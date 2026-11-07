@@ -1,13 +1,13 @@
 // ============================================================================
 // DATE SHEET SERVICE — examination date sheets (image or PDF)
 // ============================================================================
-// Record shape (matches the future Supabase `date_sheets` table):
+// Record shape matches the Supabase `date_sheets` table:
 //   id               string
 //   class_id         string
 //   stream           string|null
 //   exam_name        string      — e.g. 'Half-Yearly Examination'
 //   academic_session string
-//   document_file_id string      — blob key in localStore (→ Storage path later)
+//   document_file_id string      — object path in the Supabase Storage bucket
 //   document_type    'image' | 'pdf'
 //   publication_date string      — ISO date
 //   published        boolean
