@@ -27,8 +27,8 @@ function all() {
   return loadRecords(KEY, [])
 }
 
-function persist(records) {
-  saveRecords(KEY, records)
+async function persist(records) {
+  await saveRecords(KEY, records)
   emitContentChanged()
 }
 
@@ -86,7 +86,7 @@ export function listSubjectNames(classId, stream = null) {
  * Replace the full subject list for a class/stream with ordered names.
  * (Simplest reliable way to apply the admin's add/edit/reorder/delete edits.)
  */
-export function replaceSubjects(classId, stream, names) {
+export async function replaceSubjects(classId, stream, names) {
   seedIfNeeded()
   const key = comboKey(classId, stream)
   const kept = all().filter((r) => comboKey(r.class_id, r.stream) !== key)
@@ -100,7 +100,7 @@ export function replaceSubjects(classId, stream, names) {
     created_at: nowISO(),
     updated_at: nowISO(),
   }))
-  persist([...kept, ...added])
+  await persist([...kept, ...added])
 }
 
 /** Deduplicated count helpers for the dashboard. */
