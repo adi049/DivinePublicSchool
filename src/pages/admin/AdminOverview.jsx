@@ -13,6 +13,7 @@ import {
   Images,
   Megaphone,
   Settings,
+  Inbox,
 } from 'lucide-react'
 import { StatCard, EmptyState } from '../../components/admin/AdminUI.jsx'
 import { useTimetables, useDateSheets, useContentReady, useEvents } from '../../services/hooks.js'
@@ -38,6 +39,7 @@ const QUICK_LINKS = [
   { to: '/admin/date-sheets', label: 'Publish a date sheet', icon: FileClock },
   { to: '/admin/gallery', label: 'Add gallery photographs', icon: Images },
   { to: '/admin/events', label: 'Create an event popup', icon: Megaphone },
+  { to: '/admin/enquiries', label: 'Review website enquiries', icon: Inbox },
   { to: '/admin/settings', label: 'Website settings', icon: Settings },
 ]
 
