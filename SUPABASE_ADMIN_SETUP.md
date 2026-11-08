@@ -4,9 +4,11 @@ Project: `dazrkmpnqrfrofilbeca`
 
 ## Admin identity
 
-Only this mailbox is automatically allow-listed:
+Only this mailbox is currently automatically allow-listed for admin login:
 
 `divinepublicschoolmarutikunj@gmail.com`
+
+The confirmed school notification inbox is `divinepublicschoolfirst@gmail.com`. This notification inbox does not change the administrator login allow-list.
 
 The database trigger `divine_school_admin_auth_sync` watches Supabase Auth users. When a user with this exact email is created (or their email is changed to this exact address), it inserts/updates the matching `auth.users.id` in `public.school_admins`. If that account's email is changed away from the authorized address, its admin membership is removed.
 
