@@ -48,7 +48,7 @@ Deno.serve(async (req: Request) => {
 
   const resendKey = Deno.env.get("RESEND_API_KEY");
   const fromEmail = Deno.env.get("RESEND_FROM_EMAIL");
-  const notifyEmail = Deno.env.get("NOTIFY_EMAIL_TO") ?? "divinepublicschoolmarutikunj@gmail.com";
+  const notifyEmail = Deno.env.get("NOTIFY_EMAIL_TO") ?? "divinepublicschoolfirst@gmail.com";
 
   if (resendKey && fromEmail) {
     tasks.push(fetch("https://api.resend.com/emails", {
