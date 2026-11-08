@@ -6,6 +6,12 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
+function escapeHtml(value: string) {
+  return value.replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  })[char] ?? char);
+}
+
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
@@ -33,6 +39,7 @@ Deno.serve(async (req: Request) => {
   const type = String(enquiry.enquiry_type ?? "contact").slice(0, 40);
   const message = String(enquiry.message ?? "").slice(0, 1500);
   const createdAt = String(enquiry.created_at ?? new Date().toISOString());
+  const safe = { parent: escapeHtml(parent), student: escapeHtml(student), phone: escapeHtml(phone), email: escapeHtml(email), className: escapeHtml(className), type: escapeHtml(type), message: escapeHtml(message), createdAt: escapeHtml(createdAt) };
 
   if (!parent || !phone || !email || !className) return json({ error: "Required enquiry fields are missing" }, 400);
 
@@ -53,14 +60,14 @@ Deno.serve(async (req: Request) => {
         subject: `New ${type === "admissions" ? "admission" : "website"} enquiry — ${parent}`,
         html: `
           <h2>New enquiry received — Divine Public School</h2>
-          <p><b>Type:</b> ${type}</p>
-          <p><b>Parent/Guardian:</b> ${parent}</p>
-          <p><b>Student:</b> ${student || "Not provided"}</p>
-          <p><b>Phone:</b> ${phone}</p>
-          <p><b>Email:</b> ${email}</p>
-          <p><b>Class:</b> ${className}</p>
-          <p><b>Message:</b> ${message || "No message"}</p>
-          <p><b>Received:</b> ${createdAt}</p>
+          <p><b>Type:</b> ${safe.type}</p>
+          <p><b>Parent/Guardian:</b> ${safe.parent}</p>
+          <p><b>Student:</b> ${safe.student || "Not provided"}</p>
+          <p><b>Phone:</b> ${safe.phone}</p>
+          <p><b>Email:</b> ${safe.email}</p>
+          <p><b>Class:</b> ${safe.className}</p>
+          <p><b>Message:</b> ${safe.message || "No message"}</p>
+          <p><b>Received:</b> ${safe.createdAt}</p>
         `,
       }),
     }).then(async r => {
