@@ -12,6 +12,7 @@ import MandatoryDisclosure from './pages/MandatoryDisclosure.jsx'
 import { PrivacyPolicy, TermsConditions } from './pages/Legal.jsx'
 import NotFound from './pages/NotFound.jsx'
 import AdminAccess from './pages/AdminAccess.jsx'
+import AdminPasswordReset from './pages/AdminPasswordReset.jsx'
 import AdminOverview from './pages/admin/AdminOverview.jsx'
 import AdminTimetables from './pages/admin/AdminTimetables.jsx'
 import AdminSubjects from './pages/admin/AdminSubjects.jsx'
@@ -67,6 +68,7 @@ export default function App() {
 
         {/* ------------------------------------------------- admin section */}
         <Route path="/admin" element={<AdminAccess />} />
+        <Route path="/admin/reset-password" element={<AdminPasswordReset />} />
         <Route element={<RequireAuth />}>
           <Route path="/admin/dashboard" element={<AdminOverview />} />
           <Route path="/admin/timetables" element={<AdminTimetables />} />
