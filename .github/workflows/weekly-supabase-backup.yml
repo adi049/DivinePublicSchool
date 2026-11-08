@@ -26,6 +26,9 @@ jobs:
         with:
           version: latest
 
+      - name: Install rclone
+        run: curl https://rclone.org/install.sh | sudo bash
+
       - name: Link Supabase project
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
