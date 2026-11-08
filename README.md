@@ -1,113 +1,116 @@
-# Divine Public School — Website Frontend
+# Divine Public School — Website & Admin Portal
 
-Premium, responsive school website for **Divine Public School**, Nayagaon Rd, Vatika Kunj Extension, Gurugram, Haryana (CBSE curriculum).
+Production website for **Divine Public School**, Nayagaon Rd, Vatika Kunj Extension, Gurugram, Haryana. The site follows the CBSE curriculum from Nursery to Class XII.
 
-Built with **React 18 + Vite**, **React Router**, **Framer Motion** (subtle animations) and **Lucide** icons. Fonts (Inter + Lora) are bundled locally — the site works fully offline.
+- **Frontend:** React 18, Vite, React Router (HashRouter for GitHub Pages), Framer Motion, Lucide
+- **Backend:** Supabase Database, Auth, Row Level Security, Storage and Realtime
+- **Hosting:** GitHub Pages
+- **Public URL:** https://adi049.github.io/DivinePublicSchool/
+- **Supabase project:** `dazrkmpnqrfrofilbeca`
 
-## Quick start
+## Local development
 
 ```bash
-npm install
-npm run dev      # http://localhost:5173
-npm run build    # production build → dist/
-```
+npm ci
+npm run dev
+npm run build
+``
 
-## Pages
+The production build is generated in `dist/`. GitHub Actions builds and deploys the site on pushes to `main`.
 
-| Route | Page |
+## Public pages
+
+| Route | Purpose |
 |---|---|
-| `/` | Home (hero, about preview, why-choose, curriculum preview, school life, Director's message, admissions CTA, contact preview) |
-| `/about` | School introduction, Director's profile & full official message, vision/mission/values |
-| `/gallery` | Filterable photo gallery with lightbox (prev/next, keyboard navigation) |
-| `/curriculum` | Interactive class explorer (Nursery → XII), stream selection for XI–XII, subjects & timetables |
-| `/contact` | Call / WhatsApp / Directions buttons, enquiry form with validation, map placeholder |
-| `/admissions` | Admissions 2026–27 — classes offered, enquiry process, admission enquiry form |
-| `/mandatory-disclosure` | Public Mandatory Disclosure — official school data + downloadable statutory PDFs (from `public/documents/`) |
-| `/privacy-policy`, `/terms-and-conditions` | Legal pages (review before launch) |
-| `/admin` and `/admin/*` | Staff admin: PIN gate + dashboard (local demo auth — see below) |
-| `*` | 404 page |
+| `/` | Home |
+| `/about` | School introduction and Director's message |
+| `/gallery` | School photo gallery |
+| `/curriculum` | Class-wise subjects, timetables and date sheets |
+| `/contact` | Contact details and enquiry form |
+| `/admissions` | Admission information and enquiry form |
+| `/mandatory-disclosure` | Mandatory disclosure and statutory documents |
+| `/privacy-policy` | Privacy policy |
+| `/terms-and-conditions` | Terms and conditions |
 
-## Admin Dashboard
+## Admin portal
 
-**Access** — scroll to the footer bottom bar and click the small school logo **three times**. The Admin Access screen asks for a 4-digit PIN.
+Open the footer's small school logo with the three-click gesture, or navigate directly to `/#/admin`.
 
-- **First visit on a device:** you create the PIN (enter twice). It is stored only as a salted SHA-256 hash in that browser (`localStorage`), never in the source code. The sign-in session is per-tab (`sessionStorage`).
-- ⚠️ This is a deliberate **temporary, device-local gate** — a screen against casual access, not real security. Supabase Auth (email + role) will replace it. Only `src/services/authService.js` changes when that happens.
+Admin sign-in uses **Supabase Auth email/password**. Only the email allow-listed in `public.school_admins` is authorized. Password recovery is available through the Forgot Password link; the reset flow returns to `/#/admin/reset-password`.
 
-**Dashboard sections** (left sidebar):
+Admin dashboard sections:
 
-| Section | What it does |
-|---|---|
-| Overview | Live counts (classes, timetables, subjects, date sheets) computed from stored records + recent-changes list |
-| Manage Timetables | Upload / replace / unpublish / delete a timetable **photograph** per class (Classes 11 & 12 per stream) with title, session, effective date |
-| Manage Subjects | Per-class (and per-stream) subject lists: add, edit, delete, reorder (arrows), save |
-| Date Sheets | Upload examination date sheets as **image or PDF** with exam name, session, publication date |
-| Gallery Management | Add photographs; hide/show any photo. Official school photographs are protected from deletion |
-| Website Settings | Top announcement banner (on/off + text), change admin PIN |
+- Overview
+- Timetables
+- Subjects
+- Date Sheets
+- Gallery
+- Events
+- Enquiries
+- Website Settings
 
-**Timetable & date-sheet viewing (public Curriculum page)** — students pick class (and stream for 11/12) → tabs: Overview / Subjects / **Timetable** / **Date Sheet**. Images open in a viewer with zoom in/out, drag-to-pan, mouse-wheel zoom, fullscreen, reset and download; PDFs open embedded with open/download actions. When nothing is published, a clean “…will be available soon” note appears.
+Admin uploads are stored in the Supabase `school-media` bucket. Admin content changes are shared through Supabase and Realtime; this is not device-local demo storage.
 
-### Data layer (temporary — prepared for Supabase)
+## Enquiry flow
 
-`src/services/` isolates everything:
+1. Parent submits the contact or admission enquiry form.
+2. The enquiry is saved in the Supabase `enquiries` table and shown in the admin Enquiries section.
+3. The site opens the school's WhatsApp chat with the enquiry details pre-filled.
+4. The parent reviews the message and manually taps **Send**.
 
-| Module | Role | Stores in (until Supabase) |
-|---|---|---|
-| `authService.js` | PIN setup/verify/change — swap for Supabase Auth | localStorage (hash) + sessionStorage |
-| `timetableService.js` | timetable CRUD | localStorage records + IndexedDB photos |
-| `subjectService.js` | subject CRUD | localStorage |
-| `datesheetService.js` | date-sheet CRUD (image/PDF) | localStorage + IndexedDB files |
-| `galleryService.js` | gallery photos | localStorage + IndexedDB files |
-| `settingsService.js` | announcement etc. | localStorage |
-| `localStore.js` | the only file touching localStorage/IndexedDB | — |
-| `catalogue.js` | canonical class/stream ids used everywhere | — |
+**No WhatsApp Cloud API, Meta access token, WhatsApp template or automated WhatsApp sending is used.** The parent sends the WhatsApp message themselves. Database saving and WhatsApp chat opening are separate steps; a successful database save is shown before continuing.
 
-Record shapes mirror the planned Supabase tables (`timetables`, `subjects`, `date_sheets`). Uploaded files persist across refreshes (IndexedDB). **Nothing syncs between devices yet** — the admin screens say so explicitly.
+## Supabase setup and security
 
-| What | File |
-|---|---|
+Project URL: `https://dazrkmpnqrfrofilbeca.supabase.co`
 
+The browser uses only the Supabase publishable/anon key. Never expose a service-role or secret key in frontend code, GitHub, or chat.
 
-## Where to edit content (no JSX changes needed)
+Database access is protected with Row Level Security:
+- Public visitors can read published public-facing content.
+- Public visitors can insert enquiries, but cannot read enquiry records.
+- Authenticated administrators can manage school content only when their user ID is present in `public.school_admins`.
+- The admin membership table does not allow users to grant themselves administrator access.
+- Storage write policies require an authorized admin.
 
-| What | File |
-|---|---|
-| Mandatory disclosure data & document links | `src/data/disclosure.js` |
-| Gallery photos, captions, categories (real school photos) | `src/data/gallery.js` |
+See:
+- `SUPABASE_ADMIN_SETUP.md` for admin identity, permissions and password recovery redirect setup.
+- `SUPABASE_NOTIFICATIONS_SETUP.md` for the enquiry notification architecture and the no-WhatsApp-API decision.
+- `SUPABASE_BACKUP_SETUP.md` for the optional weekly external backup workflow.
 
-### Photographs
-All photographs are the school's real photos, downloaded from the official website (divinepublicschoolgurgaon.com) and stored locally in `public/images/gallery/`. New photographs provided separately can be dropped into that folder and registered in `src/data/gallery.js`.
+## Backup status — action still required
 
-## Where to edit content (no JSX changes needed)
+A weekly backup workflow is committed at `.github/workflows/weekly-supabase-backup.yml`. It exports the application database schema/data/roles and downloads `school-media` objects to a private Google Drive remote, retaining 90 days.
 
-| What | File |
-|---|---|
-| School name, address (Nayagaon Rd, Vatika Kunj Extension), phones, email, WhatsApp, map link | `src/data/school.js` (`SCHOOL`) |
-| Director's name, photo, message, biography | `src/data/school.js` (`DIRECTOR`) |
-| Why-choose points, vision/mission/values, about intro | `src/data/school.js` |
-| Subjects per class, Class 11–12 stream subjects | `src/data/curriculum.js` (`CLASSES`, `STREAMS`) |
-| Timetables (by group: prePrimary, primary, middle, secondary, per-stream) | `src/data/curriculum.js` (`TIMETABLES`) |
-| Gallery photos, captions, categories | `src/data/gallery.js` |
+**The backup is not active until all three GitHub Actions repository secrets are configured:**
+- `SUPABASE_ACCESS_TOKEN`
+- `SUPABASE_DB_URL`
+- `RCLONE_CONFIG_B64`
 
-### Adding or replacing photographs
-Drop new photographs into `public/images/gallery/` and register each in `src/data/gallery.js` — entries carry `src`, `caption`, `alt` and `category` (`Campus` / `Infrastructure` / `Celebrations`, or add a new category to `GALLERY_CATEGORIES`). The hero (`public/images/hero-campus.jpg`) and about (`public/images/about-building.jpg`) photos are also real campus photographs that can be replaced in place.
+After adding the secrets, run **Actions → Weekly private Supabase backup → Run workflow**, confirm success, and verify the archive in the private Drive. A restore drill into a separate test project is still required. Backups contain parent contact information and must remain private.
 
-## Connecting a backend later
+## SEO and launch checklist
 
-The two enquiry forms (`Contact` and `Admissions`) are frontend-only. In
-`src/components/forms/EnquiryForm.jsx`, replace the simulated delay inside
-`handleSubmit` (marked with `TODO(backend integration)`) with a `fetch()` POST
-to your endpoint — validation and the success UI are already in place.
+The repository includes page metadata, structured data, `robots.txt`, `sitemap.xml`, favicons and crawlable static entry pages. Google indexing is not guaranteed and must be completed through the school's Google Search Console account.
 
-## Design system
+See `SEO-CHECKLIST.md` for Search Console ownership verification, sitemap submission, indexing requests and Google Business Profile checks. The checklist's verification and indexing steps require access to the school's Google account.
 
-- White base, light-blue primary accent (`--blue: #1e6fc4`), soft-green secondary (`--green: #43a37c`), dark-navy text/footer (`--ink: #0e2c49`)
-- Typeface: **Lora** (headings) + **Inter** (body/UI) — self-hosted via `@fontsource`
-- All design tokens live at the top of `src/styles/base.css`; page- and component-level styles in `src/styles/components.css` and `src/styles/pages.css`
+## Content maintenance
 
-## Notes
+- School contact details and Director profile: `src/data/school.js`
+- Curriculum data: `src/data/curriculum.js`
+- Gallery captions and categories: `src/data/gallery.js`
+- Mandatory disclosure: `src/data/disclosure.js`
+- SEO page metadata: `src/data/seo.js`
+- School images: `public/images/`
+- Statutory PDFs: `public/documents/`
 
-- No invented statistics, testimonials or awards are used anywhere on the site; subjects/timetables are clearly flagged as placeholder data.
-- SEO: per-page titles & meta descriptions (`src/hooks/useSEO.js`), semantic HTML, alt text on images, single `h1` per page.
-- Accessibility: focus-visible styles, `aria` labels on interactive controls, `prefers-reduced-motion` respected, keyboard-navigable lightbox and tabs.
-"# DivinePublic" 
+Keep school details, statutory documents, fees, admission dates and academic records verified by the school before publishing changes.
+
+## Important outstanding launch items
+
+1. Configure and test the private weekly backup secrets and complete a restore drill.
+2. Complete Google Search Console verification and sitemap submission using the school's Google account.
+3. Confirm the intended custom domain and DNS/HTTPS setup before switching canonical URLs or sitemap entries away from the GitHub Pages URL.
+4. Enable Supabase leaked-password protection in Authentication security settings.
+5. Review the legal pages with the school before treating them as approved legal notices.
