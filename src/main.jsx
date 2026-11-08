@@ -16,6 +16,17 @@ import '@fontsource/lora/600.css'
 import '@fontsource/lora/700.css'
 import '@fontsource/lora/600-italic.css'
 
+// Supabase Auth sends recovery credentials in the URL fragment. Capture the
+// short-lived token before HashRouter interprets the fragment as an app route.
+if (typeof window !== 'undefined' && window.location.hash.includes('type=recovery')) {
+  const recoveryParams = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+  const recoveryToken = recoveryParams.get('access_token')
+  if (recoveryToken) {
+    sessionStorage.setItem('dps.auth.recovery-token', recoveryToken)
+    window.history.replaceState(null, '', window.location.pathname + window.location.search + '#/admin/reset-password')
+  }
+}
+
 // Global styles
 import './styles/base.css'
 import './styles/components.css'
