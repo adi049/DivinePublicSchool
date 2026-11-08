@@ -39,7 +39,6 @@ jobs:
           supabase db dump --remote="$SUPABASE_DB_URL" -f backup/database/schema.sql
           supabase db dump --remote="$SUPABASE_DB_URL" -f backup/database/data.sql --data-only --use-copy -x "storage.buckets_vectors" -x "storage.vector_indexes"
           supabase db dump --remote="$SUPABASE_DB_URL" -f backup/database/roles.sql --role-only
-          supabase db dump --remote="$SUPABASE_DB_URL" -f backup/database/roles.sql --role-only
 
       - name: Download school-media storage objects
         env:
