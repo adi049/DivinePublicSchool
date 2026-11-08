@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Send, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react'
+import { Send, AlertCircle, CheckCircle2, Loader2, MessageCircle, ExternalLink } from 'lucide-react'
 import Button from '../ui/Button.jsx'
 import { CLASS_OPTIONS } from '../../data/curriculum.js'
 import { SCHOOL } from '../../data/school.js'
@@ -32,6 +32,7 @@ export default function EnquiryForm({ variant = 'contact' }) {
   const [sending, setSending] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [sendError, setSendError] = useState('')
+  const [whatsappUrl, setWhatsappUrl] = useState('')
 
   const fields = [
     {
@@ -121,8 +122,11 @@ export default function EnquiryForm({ variant = 'contact' }) {
     if (Object.keys(nextErrors).length > 0) return
     setSending(true)
     setSendError('')
+    setWhatsappUrl('')
+    // Reserve a tab during the submit gesture so popup blockers do not block WhatsApp.
+    const whatsappTab = window.open('about:blank', '_blank')
     try {
-      await supabaseRequest('rest/v1/enquiries', {
+      const savedEnquiry = await supabaseRequest('rest/v1/enquiries?select=id,created_at', {
         method: 'POST',
         body: {
           parent_name: values.parentName.trim(),
@@ -134,11 +138,27 @@ export default function EnquiryForm({ variant = 'contact' }) {
           enquiry_type: isAdmission ? 'admissions' : 'contact',
           status: 'new',
         },
-        prefer: 'return=minimal',
+        prefer: 'return=representation',
       })
+      const whatsappMessage = [
+        'Hello Divine Public School, I have submitted an enquiry through the website.',
+        `Enquiry type: ${isAdmission ? 'Admission' : 'General'}`,
+        `Parent / Guardian: ${values.parentName.trim()}`,
+        ...(values.studentName.trim() ? [`Student: ${values.studentName.trim()}`] : []),
+        `Phone: ${values.phone.replace(/\\D/g, '').slice(-10)}`,
+        `Email: ${values.email.trim()}`,
+        `Class interested in: ${values.classInterested}`,
+        ...(values.message.trim() ? [`Message: ${values.message.trim()}`] : []),
+        `Enquiry reference: ${savedEnquiry?.[0]?.id || 'Saved in school website admin panel'}`,
+      ].join('\\n')
+      const nextWhatsappUrl = `${SCHOOL.whatsapp.url}?text=${encodeURIComponent(whatsappMessage)}`
+      setWhatsappUrl(nextWhatsappUrl)
       setSubmitted(true)
+      if (whatsappTab) whatsappTab.location.href = nextWhatsappUrl
+      else setSendError('Your enquiry is saved. Use the WhatsApp button below to send the details to the school.')
     } catch (err) {
-      setSendError(err.message || 'Your enquiry could not be sent. Please call the school office.')
+      if (whatsappTab) whatsappTab.close()
+      setSendError(err.message || 'Your enquiry could not be saved. Please call the school office.')
     } finally {
       setSending(false)
     }
@@ -158,10 +178,17 @@ export default function EnquiryForm({ variant = 'contact' }) {
           Thank you — your enquiry has been noted.
         </h4>
         <p>
-          Our {isAdmission ? 'admissions' : 'school'} office will get in touch with you shortly on
-          the phone number or email you provided. For anything urgent, please call us on{' '}
-          <strong>{SCHOOL.phones[0].display}</strong>.
+          Your details have been saved in the school admin panel. WhatsApp is opening with your enquiry
+          pre-filled; please tap Send in WhatsApp so the school office receives your message.
         </p>
+        {whatsappUrl && (
+          <p style={{ marginTop: '1rem' }}>
+            <a className="btn btn--green" href={whatsappUrl} target="_blank" rel="noreferrer">
+              <MessageCircle size={17} aria-hidden="true" /> Send enquiry on WhatsApp <ExternalLink size={14} aria-hidden="true" />
+            </a>
+          </p>
+        )}
+        <p style={{ marginTop: '1rem' }}>For anything urgent, please call <strong>{SCHOOL.phones[0].display}</strong>.</p>
         <Button variant="outline" onClick={handleReset}>
           Send another enquiry
         </Button>
@@ -238,12 +265,11 @@ export default function EnquiryForm({ variant = 'contact' }) {
               <Loader2 size={17} className="spin" aria-hidden="true" /> Sending…
             </>
           ) : (
-            'Submit Enquiry'
+            'Save & Continue to WhatsApp'
           )}
         </Button>
         <p className="form-note">
-          Submitting this form records an enquiry only. For admission confirmation, the school will
-          guide you through the remaining steps.
+          Your enquiry is saved securely first. WhatsApp then opens with the same details ready to send.
         </p>
       </div>
     </form>
