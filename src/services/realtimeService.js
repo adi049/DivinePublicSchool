@@ -74,11 +74,13 @@ function connect() {
   socket.onopen = () => {
     retryDelay = 1000
     const token = getStoredSessionToken()
+    const isAdminSession = token !== SUPABASE_ANON_KEY
+    const subscribedTables = isAdminSession ? TABLES : TABLES.filter(table => table !== 'gallery_hidden')
     send(socket, 'phx_join', {
       config: {
         broadcast: { ack: false, self: false },
         presence: { key: '' },
-        postgres_changes: TABLES.map(table => ({
+        postgres_changes: subscribedTables.map(table => ({
           event: '*',
           schema: 'public',
           table,
