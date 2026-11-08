@@ -1,0 +1,72 @@
+name: Weekly private Supabase backup
+
+on:
+  schedule:
+    # Every Sunday at 20:00 UTC (Monday 01:30 India time)
+    - cron: "0 20 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: divine-school-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Supabase CLI and rclone
+        shell: bash
+        run: |
+          npm install --global supabase
+          curl https://rclone.org/install.sh | sudo bash
+
+      - name: Link Supabase project
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          supabase link --project-ref dazrkmpnqrfrofilbeca --password "$SUPABASE_DB_PASSWORD"
+
+      - name: Export database
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          mkdir -p backup/database backup/storage
+          supabase db dump --db-url "$SUPABASE_DB_URL" --file backup/database/schema-and-data.sql
+
+      - name: Download school-media storage objects
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          mkdir -p backup/storage/school-media
+          supabase storage cp ss:///school-media backup/storage/school-media --recursive --experimental --linked
+
+      - name: Configure private Google Drive remote
+        env:
+          RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+        run: |
+          mkdir -p "$HOME/.config/rclone"
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          rclone listremotes | grep -qx 'schooldrive:'
+
+      - name: Upload encrypted-in-transit backup files to private Drive
+        env:
+          BACKUP_DATE: ${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          DATE="$(date -u +%Y-%m-%d)"
+          tar -czf "divine-school-backup-$DATE.tar.gz" backup
+          rclone copy "divine-school-backup-$DATE.tar.gz" "schooldrive:DivinePublicSchoolBackups/$DATE/"
+          rclone delete "schooldrive:DivinePublicSchoolBackups" --min-age 90d || true
+          rclone rmdirs "schooldrive:DivinePublicSchoolBackups" --leave-root || true
+
+      - name: Remove temporary backup files
+        if: always()
+        run: rm -rf backup divine-school-backup-*.tar.gz
