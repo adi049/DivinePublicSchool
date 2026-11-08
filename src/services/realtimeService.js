@@ -97,8 +97,12 @@ function connect() {
     let message
     try { message = JSON.parse(event.data) } catch { return }
 
-    if (message.event === 'phx_reply' && message.payload?.status === 'ok') {
-      joined = true
+    if (message.event === 'phx_reply') {
+      if (message.payload?.status === 'ok') joined = true
+      else {
+        console.warn('[Supabase Realtime] Join/reply failed:', message.payload)
+        socket.close()
+      }
       return
     }
     if (message.event === 'postgres_changes') {
