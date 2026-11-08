@@ -78,42 +78,8 @@ Deno.serve(async (req: Request) => {
     outcomes.email = "not_configured";
   }
 
-  const waToken = Deno.env.get("WHATSAPP_ACCESS_TOKEN");
-  const waPhoneId = Deno.env.get("WHATSAPP_PHONE_NUMBER_ID");
-  const waTo = Deno.env.get("WHATSAPP_TO_NUMBER");
-  const waTemplate = Deno.env.get("WHATSAPP_TEMPLATE_NAME");
-  const waLanguage = Deno.env.get("WHATSAPP_TEMPLATE_LANGUAGE") ?? "en";
-
-  if (waToken && waPhoneId && waTo && waTemplate) {
-    const graphVersion = Deno.env.get("META_GRAPH_API_VERSION") ?? "v22.0";
-    tasks.push(fetch(`https://graph.facebook.com/${graphVersion}/${waPhoneId}/messages`, {
-      method: "POST",
-      headers: { "Authorization": `Bearer ${waToken}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        messaging_product: "whatsapp",
-        to: waTo,
-        type: "template",
-        template: {
-          name: waTemplate,
-          language: { code: waLanguage },
-          components: [{
-            type: "body",
-            parameters: [
-              { type: "text", text: parent },
-              { type: "text", text: phone },
-              { type: "text", text: className },
-              { type: "text", text: type },
-            ],
-          }],
-        },
-      }),
-    }).then(async r => {
-      outcomes.whatsapp = r.ok ? "sent" : `failed:${r.status} ${(await r.text()).slice(0, 300)}`;
-      return r;
-    }));
-  } else {
-    outcomes.whatsapp = "not_configured";
-  }
+  // No WhatsApp Cloud API is used. The public form handles WhatsApp click-to-chat
+  // with a pre-filled message after the enquiry has been saved.
 
   await Promise.allSettled(tasks);
   return json({ ok: true, notifications: outcomes });
