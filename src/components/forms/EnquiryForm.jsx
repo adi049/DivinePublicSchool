@@ -178,9 +178,10 @@ export default function EnquiryForm({ variant = 'contact' }) {
           Thank you — your enquiry has been noted.
         </h4>
         <p>
-          Your details have been saved in the school admin panel. WhatsApp is opening with your enquiry
+          Your details have been saved in the school admin panel. WhatsApp should open with your enquiry
           pre-filled; please tap Send in WhatsApp so the school office receives your message.
         </p>
+        {sendError && <p className="field__err" role="status">{sendError}</p>}
         {whatsappUrl && (
           <p style={{ marginTop: '1rem' }}>
             <a className="btn btn--green" href={whatsappUrl} target="_blank" rel="noreferrer">
