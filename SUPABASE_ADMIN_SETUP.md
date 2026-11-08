@@ -29,3 +29,12 @@ The trigger only maps the email to the admin allow-list. It does not create or s
 - No sample records are seeded. The content tables remain empty until school staff add content.
 
 Never put a Supabase service-role/secret key in the browser or repository. The browser must use only the publishable key.
+
+
+## Password recovery redirect
+
+The admin sign-in page includes a Forgot password flow. In Supabase Dashboard → Authentication → URL Configuration, set the Site URL and add this exact Redirect URL to the allow list:
+
+`https://adi049.github.io/DivinePublicSchool/`
+
+The reset email returns to the GitHub Pages site, where the app captures the short-lived recovery token and opens `#/admin/reset-password`. Test by requesting a reset for the school admin email and completing the password change from the email link.
