@@ -145,12 +145,12 @@ export default function EnquiryForm({ variant = 'contact' }) {
         `Enquiry type: ${isAdmission ? 'Admission' : 'General'}`,
         `Parent / Guardian: ${values.parentName.trim()}`,
         ...(values.studentName.trim() ? [`Student: ${values.studentName.trim()}`] : []),
-        `Phone: ${values.phone.replace(/\\D/g, '').slice(-10)}`,
+        `Phone: ${values.phone.replace(/\D/g, '').slice(-10)}`,
         `Email: ${values.email.trim()}`,
         `Class interested in: ${values.classInterested}`,
         ...(values.message.trim() ? [`Message: ${values.message.trim()}`] : []),
         `Enquiry reference: ${savedEnquiry?.[0]?.id || 'Saved in school website admin panel'}`,
-      ].join('\\n')
+      ].join('\n')
       const nextWhatsappUrl = `${SCHOOL.whatsapp.url}?text=${encodeURIComponent(whatsappMessage)}`
       setWhatsappUrl(nextWhatsappUrl)
       setSubmitted(true)
