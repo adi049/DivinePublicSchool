@@ -58,3 +58,28 @@ export async function logout() {
     try { await supabaseRequest('auth/v1/logout', { method: 'POST', token: session.access_token }) } catch {}
   }
 }
+
+
+// Send a Supabase Auth recovery email. The redirect must be allow-listed in
+// Authentication → URL Configuration in the Supabase dashboard.
+export async function requestPasswordReset(email, redirectTo) {
+  const normalizedEmail = email.trim().toLowerCase()
+  if (!normalizedEmail) throw new Error('Enter your administrator email address first.')
+  await supabaseRequest('auth/v1/recover?redirect_to=' + encodeURIComponent(redirectTo), {
+    method: 'POST',
+    body: { email: normalizedEmail },
+    token: SUPABASE_ANON_KEY,
+  })
+}
+
+// Complete the recovery flow using the short-lived access token supplied in
+// the password-reset email redirect. The token is never stored in source code.
+export async function updateRecoveredPassword(accessToken, password) {
+  if (!accessToken) throw new Error('Password reset link is missing or expired. Request a new link.')
+  if (password.length < 8) throw new Error('Use a password with at least 8 characters.')
+  await supabaseRequest('auth/v1/user', {
+    method: 'PUT',
+    body: { password },
+    token: accessToken,
+  })
+}
