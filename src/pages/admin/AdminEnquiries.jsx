@@ -35,7 +35,12 @@ export default function AdminEnquiries() {
     }
   }, [])
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => {
+    load()
+    const handleUpdate = () => load()
+    window.addEventListener('dps:enquiries-updated', handleUpdate)
+    return () => window.removeEventListener('dps:enquiries-updated', handleUpdate)
+  }, [load])
 
   const updateStatus = async (id, status) => {
     setBusyId(id)
