@@ -109,7 +109,11 @@ function connect() {
       return
     }
     if (message.event === 'postgres_changes') {
-      scheduleRefresh()
+      if (message.payload?.data?.table === 'enquiries') {
+        window.dispatchEvent(new CustomEvent('dps:enquiries-updated'))
+      } else {
+        scheduleRefresh()
+      }
       return
     }
     if (message.event === 'phx_error' || message.event === 'phx_close') {
