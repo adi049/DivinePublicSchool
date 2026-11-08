@@ -1,6 +1,6 @@
 # Divine Public School — Notification setup
 
-The database trigger and the `notify-enquiry` Supabase Edge Function are deployed. The trigger is intentionally inactive until the private webhook secret and provider credentials are configured.
+The database trigger and the `notify-enquiry` Supabase Edge Function are deployed. The public enquiry form now saves the enquiry to Supabase first, then opens the school's WhatsApp chat with the submitted details pre-filled. The visitor must tap Send in WhatsApp. The separate email and automatic school-side WhatsApp alerts are handled by the database trigger and remain inactive until the private webhook secret and provider credentials are configured.
 
 ## 1. Configure the webhook secret
 
@@ -30,7 +30,14 @@ If the Vault secret already exists, update that secret in Vault rather than crea
 
 Email delivery cannot work from an unverified sender domain.
 
-## 3. WhatsApp notification (Meta WhatsApp Cloud API)
+## 3. WhatsApp contact flow versus automatic school alerts
+
+There are two different WhatsApp actions:
+
+- **Parent-to-school WhatsApp message:** implemented in the public enquiry form. The form saves the record first, then opens `https://wa.me/919953275511` with the same details pre-filled. The parent must tap Send. The enquiry remains in the admin panel even if the parent closes WhatsApp without sending.
+- **Automatic school-side WhatsApp alert:** optional server-to-WhatsApp notification sent to the school's configured number through Meta WhatsApp Cloud API. This requires the approved template and secrets below. A click-to-chat link does not itself send an alert to the school.
+
+## 4. WhatsApp notification (Meta WhatsApp Cloud API)
 
 1. Set up a Meta app with WhatsApp Cloud API and connect the school's WhatsApp Business phone number.
 2. Create and get approval for a message template named (or configure the actual name in the secret) `school_new_enquiry`.
@@ -61,7 +68,7 @@ Please follow up with the parent.
 
 WhatsApp business-initiated notifications require an approved template. A phone number by itself is not enough.
 
-## 4. Test
+## 5. Test
 
 After all secrets are set, submit one test enquiry through the public website. Confirm:
 - The row appears in Admin → Website Enquiries.
