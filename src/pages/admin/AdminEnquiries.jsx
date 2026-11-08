@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Inbox, RefreshCw, Phone, Mail, Clock3 } from 'lucide-react'
 import { useToast } from '../../components/admin/Toast.jsx'
-import { supabaseRequest } from '../../services/supabaseClient.js'
+import { supabaseRequest, getStoredSessionToken } from '../../services/supabaseClient.js'
 
 const STATUSES = [
   { value: 'new', label: 'New' },
@@ -26,7 +26,7 @@ export default function AdminEnquiries() {
   const load = useCallback(async () => {
     setLoading(true)
     try {
-      const rows = await supabaseRequest('rest/v1/enquiries?select=*&order=created_at.desc')
+      const rows = await supabaseRequest('rest/v1/enquiries?select=*&order=created_at.desc', { token: getStoredSessionToken() })
       setItems(Array.isArray(rows) ? rows : [])
     } catch (error) {
       toast.error(error.message || 'Could not load enquiries from Supabase.')
@@ -42,6 +42,7 @@ export default function AdminEnquiries() {
     try {
       await supabaseRequest('rest/v1/enquiries?id=eq.' + encodeURIComponent(id), {
         method: 'PATCH',
+        token: getStoredSessionToken(),
         body: { status },
         prefer: 'return=minimal',
       })
