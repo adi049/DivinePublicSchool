@@ -126,7 +126,7 @@ export default function EnquiryForm({ variant = 'contact' }) {
     // Reserve a tab during the submit gesture so popup blockers do not block WhatsApp.
     const whatsappTab = window.open('about:blank', '_blank')
     try {
-      const savedEnquiry = await supabaseRequest('rest/v1/enquiries?select=id,created_at', {
+      await supabaseRequest('rest/v1/enquiries', {
         method: 'POST',
         body: {
           parent_name: values.parentName.trim(),
@@ -138,7 +138,7 @@ export default function EnquiryForm({ variant = 'contact' }) {
           enquiry_type: isAdmission ? 'admissions' : 'contact',
           status: 'new',
         },
-        prefer: 'return=representation',
+        prefer: 'return=minimal',
       })
       const whatsappMessage = [
         'Hello Divine Public School, I have submitted an enquiry through the website.',
@@ -149,7 +149,7 @@ export default function EnquiryForm({ variant = 'contact' }) {
         `Email: ${values.email.trim()}`,
         `Class interested in: ${values.classInterested}`,
         ...(values.message.trim() ? [`Message: ${values.message.trim()}`] : []),
-        `Enquiry reference: ${savedEnquiry?.[0]?.id || 'Saved in school website admin panel'}`,
+        'Enquiry status: Saved in school website admin panel',
       ].join('\n')
       const nextWhatsappUrl = `${SCHOOL.whatsapp.url}?text=${encodeURIComponent(whatsappMessage)}`
       setWhatsappUrl(nextWhatsappUrl)
