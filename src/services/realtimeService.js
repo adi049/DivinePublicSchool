@@ -85,7 +85,7 @@ function connect() {
     }, 'realtime:public:divine-school-content', joinRef)
 
     heartbeatTimer = window.setInterval(() => {
-      send(socket, 'heartbeat', {}, 'phoenix', joinRef)
+      send(socket, 'heartbeat', {}, 'phoenix', null)
     }, 25000)
   }
 
