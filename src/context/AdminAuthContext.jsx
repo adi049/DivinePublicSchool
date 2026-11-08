@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import * as auth from '../services/authService.js'
 import { bootstrapRemoteData } from '../services/localStore.js'
+import { startRealtimeSync } from '../services/realtimeService.js'
 
 const AdminAuthContext = createContext(null)
 export function AdminAuthProvider({ children }) {
@@ -16,6 +17,7 @@ export function AdminAuthProvider({ children }) {
     })
     return () => { active = false }
   }, [])
+  useEffect(() => startRealtimeSync(), [user])
   const login = useCallback(async (email, password) => {
     const current = await auth.loginWithPassword(email, password)
     await bootstrapRemoteData()
