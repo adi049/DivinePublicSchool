@@ -16,37 +16,36 @@ concurrency:
 jobs:
   backup:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      - name: Install Supabase CLI and rclone
-        shell: bash
-        run: |
-          npm install --global supabase
-          curl https://rclone.org/install.sh | sudo bash
+      - name: Install Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
 
       - name: Link Supabase project
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-        run: |
-          supabase link --project-ref dazrkmpnqrfrofilbeca --password "$SUPABASE_DB_PASSWORD"
+        run: supabase link --project-ref dazrkmpnqrfrofilbeca
 
-      - name: Export database
+      - name: Export database schema, data and roles
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
           mkdir -p backup/database backup/storage
-          supabase db dump --db-url "$SUPABASE_DB_URL" --file backup/database/schema-and-data.sql
+          supabase db dump --remote="$SUPABASE_DB_URL" -f backup/database/schema.sql
+          supabase db dump --remote="$SUPABASE_DB_URL" -f backup/database/data.sql --data-only --use-copy -x "storage.buckets_vectors" -x "storage.vector_indexes"
+          supabase db dump --remote="$SUPABASE_DB_URL" -f backup/database/roles.sql --role-only
 
       - name: Download school-media storage objects
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: |
           mkdir -p backup/storage/school-media
-          supabase storage cp ss:///school-media backup/storage/school-media --recursive --experimental --linked
+          supabase storage cp ss:///school-media backup/storage/school-media --recursive --experimental --remote
 
       - name: Configure private Google Drive remote
         env:
@@ -57,9 +56,7 @@ jobs:
           chmod 600 "$HOME/.config/rclone/rclone.conf"
           rclone listremotes | grep -qx 'schooldrive:'
 
-      - name: Upload encrypted-in-transit backup files to private Drive
-        env:
-          BACKUP_DATE: ${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Upload backup to private Google Drive
         run: |
           DATE="$(date -u +%Y-%m-%d)"
           tar -czf "divine-school-backup-$DATE.tar.gz" backup
