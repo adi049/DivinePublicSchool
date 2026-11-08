@@ -39,7 +39,7 @@ function ScrollToTop() {
   return null
 }
 
-/** Admin routes render only after PIN verification. */
+/** Admin routes render only after the Supabase admin session is verified. */
 function RequireAuth() {
   const { authenticated, loading } = useAdminAuth()
   if (loading) return <div className="access"><div className="access__card">Checking secure admin session…</div></div>
