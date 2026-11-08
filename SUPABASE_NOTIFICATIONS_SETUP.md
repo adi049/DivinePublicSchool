@@ -25,7 +25,7 @@ If the Vault secret already exists, update that secret in Vault rather than crea
 2. Create an API key.
 3. Add these Supabase Edge Function secrets:
    - `RESEND_API_KEY`
-   - `RESEND_FROM_EMAIL` — e.g. `Divine Public School <notifications@divinepublicschoolgurgoan.com>` (only after domain verification)
+   - `RESEND_FROM_EMAIL` — e.g. `Divine Public School <admissions@notifications.divinepublicschoolgurgoan.com>` (only after verifying the `notifications.divinepublicschoolgurgoan.com` subdomain in Resend)
    - `NOTIFY_EMAIL_TO` — defaults to `divinepublicschoolfirst@gmail.com`
 
 Email delivery cannot work from an unverified sender domain.
