@@ -12,6 +12,7 @@ const TABLES = [
   'gallery_hidden',
   'events',
   'site_settings',
+  'enquiries',
 ]
 
 let activeSocket = null
@@ -75,7 +76,7 @@ function connect() {
     retryDelay = 1000
     const token = getStoredSessionToken()
     const isAdminSession = token !== SUPABASE_ANON_KEY
-    const subscribedTables = isAdminSession ? TABLES : TABLES.filter(table => table !== 'gallery_hidden')
+    const subscribedTables = isAdminSession ? TABLES : TABLES.filter(table => !['gallery_hidden', 'enquiries'].includes(table))
     send(socket, 'phx_join', {
       config: {
         broadcast: { ack: false, self: false },
