@@ -4,6 +4,7 @@ import { Eye, EyeOff, ArrowLeft, ShieldCheck, Info, Loader } from 'lucide-react'
 import useSEO from '../hooks/useSEO.js'
 import Logo from '../components/ui/Logo.jsx'
 import { useAdminAuth } from '../context/AdminAuthContext.jsx'
+import { requestPasswordReset } from '../services/authService.js'
 
 export default function AdminAccess() {
   useSEO({ title: 'Admin Access | Divine Public School', description: 'Restricted school administration login.', noindex: true })
@@ -13,8 +14,23 @@ export default function AdminAccess() {
   const [visible, setVisible] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const [resetBusy, setResetBusy] = useState(false)
+  const [resetMessage, setResetMessage] = useState('')
   if (loading) return <div className="access"><div className="access__card">Checking secure admin session…</div></div>
   if (authenticated) return <Navigate to="/admin/dashboard" replace />
+  const sendReset = async () => {
+    setError('')
+    setResetMessage('')
+    if (!email.trim()) { setError('Enter your administrator email address first.'); return }
+    setResetBusy(true)
+    try {
+      const redirectTo = window.location.origin + window.location.pathname
+      await requestPasswordReset(email, redirectTo)
+      setResetMessage('If this email belongs to an administrator account, Supabase will send a password reset link. Check your inbox and spam folder.')
+    } catch (err) {
+      setError(err.message || 'Could not send a password reset email. Please try again.')
+    } finally { setResetBusy(false) }
+  }
   const submit = async (event) => {
     event.preventDefault()
     setError('')
@@ -46,8 +62,12 @@ export default function AdminAccess() {
             </div>
           </div>
           {error && <p className="access__error" role="alert">{error}</p>}
+          {resetMessage && <p className="form-note" role="status">{resetMessage}</p>}
           <button className="btn btn--primary" type="submit" disabled={busy} style={{ width: '100%', marginTop: '1rem' }}>
             {busy ? <><Loader size={16} className="spin"/> Signing in…</> : 'Sign In Securely'}
+          </button>
+          <button type="button" className="access__back" onClick={sendReset} disabled={resetBusy} style={{ margin: '1rem auto 0', border: 0, background: 'transparent', cursor: 'pointer' }}>
+            {resetBusy ? 'Sending reset link…' : 'Forgot password? Send reset link'}
           </button>
         </form>
         <p className="access__note"><Info size={15}/> Access is restricted to accounts registered in the Supabase school_admins table. PIN login has been removed.</p>
