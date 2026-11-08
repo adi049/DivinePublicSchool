@@ -1,5 +1,6 @@
 import { SUPABASE_URL, SUPABASE_ANON_KEY, getStoredSessionToken } from './supabaseClient.js'
 import { bootstrapRemoteData } from './localStore.js'
+import { getCurrentAdmin } from './authService.js'
 
 // Native Phoenix Realtime WebSocket client: avoids adding a runtime dependency
 // and keeps the existing npm lockfile deterministic.
@@ -16,6 +17,7 @@ const TABLES = [
 let activeSocket = null
 let heartbeatTimer = null
 let reconnectTimer = null
+let tokenRefreshTimer = null
 let stopped = true
 let retryDelay = 1000
 let messageRef = 0
@@ -56,8 +58,10 @@ scheduleRefresh.pending = false
 function stopTimers() {
   if (heartbeatTimer) window.clearInterval(heartbeatTimer)
   if (reconnectTimer) window.clearTimeout(reconnectTimer)
+  if (tokenRefreshTimer) window.clearInterval(tokenRefreshTimer)
   heartbeatTimer = null
   reconnectTimer = null
+  tokenRefreshTimer = null
 }
 
 function connect() {
@@ -130,6 +134,17 @@ export function startRealtimeSync() {
   stopRealtimeSync()
   stopped = false
   connect()
+  // Supabase access tokens expire. Refresh the stored admin session periodically
+  // and reconnect the WebSocket whenever the bearer token changes.
+  tokenRefreshTimer = window.setInterval(async () => {
+    const before = getStoredSessionToken()
+    try { await getCurrentAdmin() } catch {}
+    const after = getStoredSessionToken()
+    if (!stopped && after !== before) {
+      if (activeSocket) activeSocket.close()
+      else connect()
+    }
+  }, 5 * 60 * 1000)
   return stopRealtimeSync
 }
 
