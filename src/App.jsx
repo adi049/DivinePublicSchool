@@ -15,6 +15,7 @@ import AdminAccess from './pages/AdminAccess.jsx'
 import AdminPasswordReset from './pages/AdminPasswordReset.jsx'
 import AdminOverview from './pages/admin/AdminOverview.jsx'
 import AdminTimetables from './pages/admin/AdminTimetables.jsx'
+import AdminSections from './pages/admin/AdminSections.jsx'
 import AdminSubjects from './pages/admin/AdminSubjects.jsx'
 import AdminDateSheets from './pages/admin/AdminDateSheets.jsx'
 import AdminGallery from './pages/admin/AdminGallery.jsx'
@@ -72,6 +73,7 @@ export default function App() {
         <Route element={<RequireAuth />}>
           <Route path="/admin/dashboard" element={<AdminOverview />} />
           <Route path="/admin/timetables" element={<AdminTimetables />} />
+          <Route path="/admin/sections" element={<AdminSections />} />
           <Route path="/admin/subjects" element={<AdminSubjects />} />
           <Route path="/admin/date-sheets" element={<AdminDateSheets />} />
           <Route path="/admin/gallery" element={<AdminGallery />} />
