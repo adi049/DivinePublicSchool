@@ -17,6 +17,7 @@ import {
   documentTypeOf,
 } from '../../services/datesheetService.js'
 import { classFullLabel, needsStream } from '../../services/catalogue.js'
+import { listClassSections } from '../../services/classSectionService.js'
 import { SCHOOL } from '../../data/school.js'
 
 function todayISO() {
@@ -25,6 +26,8 @@ function todayISO() {
 
 export default function AdminDateSheets() {
   const toast = useToast()
+  const [sections, setSections] = useState([])
+  const [sectionId, setSectionId] = useState(null)
   const [combo, setCombo] = useState({ classId: 'nursery', stream: null })
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState(null)
@@ -44,10 +47,19 @@ export default function AdminDateSheets() {
     }
   }, [])
 
-  const existing = useMemo(
-    () => getDateSheet(combo.classId, needsStream(combo.classId) ? combo.stream : null),
+  useEffect(() => {
+    let alive = true
+    listClassSections(combo.classId, { includeInactive: false })
+      .then((rows) => { if (alive) setSections(rows || []) })
+      .catch((error) => toast.error(error.message || 'Could not load sections.'))
+    return () => { alive = false }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [combo.classId, combo.stream, tick],
+  }, [combo.classId])
+
+  const existing = useMemo(
+    () => getDateSheet(combo.classId, needsStream(combo.classId) ? combo.stream : null, sectionId),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [combo.classId, combo.stream, sectionId, tick],
   )
 
   const docType = file ? documentTypeOf(file) : existing?.document_type || null
@@ -96,6 +108,7 @@ export default function AdminDateSheets() {
       await saveDateSheet({
         class_id: combo.classId,
         stream: needsStream(combo.classId) ? combo.stream : null,
+        section_id: sectionId,
         exam_name: examName,
         academic_session: session,
         publication_date: pubDate,
@@ -140,12 +153,21 @@ export default function AdminDateSheets() {
     <div className="stack">
       <section className="acard">
         <h2 className="acard__title">Select class</h2>
-        <ClassStreamPicker value={combo} onChange={setCombo} />
+        <ClassStreamPicker value={combo} onChange={(c) => { setCombo(c); setSectionId(null) }} />
+        {sections.length > 0 && (
+          <label className="picker__field" style={{ marginTop: '1rem' }}>
+            <span className="picker__label">Section</span>
+            <select className="select" value={sectionId || ''} onChange={(e) => setSectionId(e.target.value || null)}>
+              <option value="">Class level (no section)</option>
+              {sections.map((section) => <option key={section.id} value={section.id}>{section.section_name}</option>)}
+            </select>
+          </label>
+        )}
       </section>
 
       <section className="acard" aria-live="polite">
         <h2 className="acard__title">
-          <FileClock size={17} aria-hidden="true" /> Date sheet — {classFullLabel(combo.classId, combo.stream)}
+          <FileClock size={17} aria-hidden="true" /> Date sheet — {classFullLabel(combo.classId, combo.stream)}{sectionId ? ` · ${sections.find((s) => s.id === sectionId)?.section_name || 'Section'}` : ''}
           {existing && (
             <span className={`tag ${existing.published ? 'tag--green' : 'tag--silver'}`} style={{ marginLeft: 8 }}>
               {existing.published ? 'Published' : 'Hidden'}
