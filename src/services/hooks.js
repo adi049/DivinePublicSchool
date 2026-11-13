@@ -57,9 +57,9 @@ export function useTimetableRecord(classId, stream) {
 }
 
 /** Published timetable for the public website. */
-export function usePublishedTimetable(classId, stream) {
+export function usePublishedTimetable(classId, stream, sectionId = null) {
   useContentTick()
-  return timetableService.getPublishedTimetable(classId, stream)
+  return timetableService.getPublishedTimetable(classId, stream, sectionId)
 }
 
 // ------------------------------------------------------------ subjects
@@ -80,9 +80,9 @@ export function useDateSheetRecord(classId, stream) {
 }
 
 /** Published date sheet for the public website. */
-export function usePublishedDateSheet(classId, stream) {
+export function usePublishedDateSheet(classId, stream, sectionId = null) {
   useContentTick()
-  return datesheetService.getPublishedDateSheet(classId, stream)
+  return datesheetService.getPublishedDateSheet(classId, stream, sectionId)
 }
 
 // ------------------------------------------------------------ gallery
