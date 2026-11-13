@@ -33,13 +33,13 @@ export function listDateSheets() {
   return [...all()].sort((a, b) => (b.updated_at || '').localeCompare(a.updated_at || ''))
 }
 
-export function getDateSheet(classId, stream = null) {
+export function getDateSheet(classId, stream = null, sectionId = null) {
   const key = comboKey(classId, stream)
-  return all().find((r) => comboKey(r.class_id, r.stream) === key) || null
+  return all().find((r) => comboKey(r.class_id, r.stream) === key && (r.section_id || null) === (sectionId || null)) || null
 }
 
-export function getPublishedDateSheet(classId, stream = null) {
-  const rec = getDateSheet(classId, stream)
+export function getPublishedDateSheet(classId, stream = null, sectionId = null) {
+  const rec = getDateSheet(classId, stream, sectionId)
   return rec && rec.published ? rec : null
 }
 
@@ -53,7 +53,7 @@ export function documentTypeOf(file) {
 export async function saveDateSheet(input) {
   const records = all()
   const existing = records.find(
-    (r) => comboKey(r.class_id, r.stream) === comboKey(input.class_id, input.stream ?? null),
+    (r) => comboKey(r.class_id, r.stream) === comboKey(input.class_id, input.stream ?? null) && (r.section_id || null) === (input.section_id || null),
   )
 
   let fileId = existing?.document_file_id || null
@@ -71,6 +71,7 @@ export async function saveDateSheet(input) {
     id: existing?.id || newId('ds'),
     class_id: input.class_id,
     stream: input.stream ?? null,
+    section_id: input.section_id || null,
     exam_name: (input.exam_name || '').trim(),
     academic_session: (input.academic_session || '').trim(),
     document_file_id: fileId,
