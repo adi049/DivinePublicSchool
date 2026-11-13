@@ -35,14 +35,14 @@ export function listTimetables() {
 }
 
 /** The record for a class (and stream, when applicable) — one per combo. */
-export function getTimetable(classId, stream = null) {
+export function getTimetable(classId, stream = null, sectionId = null) {
   const key = comboKey(classId, stream)
-  return all().find((r) => comboKey(r.class_id, r.stream) === key) || null
+  return all().find((r) => comboKey(r.class_id, r.stream) === key && (r.section_id || null) === (sectionId || null)) || null
 }
 
 /** The published record for the public website (or null). */
-export function getPublishedTimetable(classId, stream = null) {
-  const rec = getTimetable(classId, stream)
+export function getPublishedTimetable(classId, stream = null, sectionId = null) {
+  const rec = getTimetable(classId, stream, sectionId)
   return rec && rec.published ? rec : null
 }
 
@@ -53,7 +53,7 @@ export function getPublishedTimetable(classId, stream = null) {
 export async function saveTimetable(input) {
   const records = all()
   const existing = records.find(
-    (r) => comboKey(r.class_id, r.stream) === comboKey(input.class_id, input.stream ?? null),
+    (r) => comboKey(r.class_id, r.stream) === comboKey(input.class_id, input.stream ?? null) && (r.section_id || null) === (input.section_id || null),
   )
 
   let imageFileId = existing?.image_file_id || null
@@ -69,6 +69,7 @@ export async function saveTimetable(input) {
     id: existing?.id || newId('tt'),
     class_id: input.class_id,
     stream: input.stream ?? null,
+    section_id: input.section_id || null,
     title: (input.title || '').trim(),
     image_file_id: imageFileId,
     academic_session: (input.academic_session || '').trim(),
