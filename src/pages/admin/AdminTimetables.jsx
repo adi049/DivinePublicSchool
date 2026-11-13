@@ -76,7 +76,7 @@ export default function AdminTimetables() {
       setPreview(null)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [combo.classId, combo.stream, tick])
+  }, [combo.classId, combo.stream, sectionId, tick])
 
   // Revoke only the preview URL we created ourselves (never service-cached URLs)
   useEffect(() => {
