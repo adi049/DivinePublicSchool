@@ -21,6 +21,7 @@ import {
   timetableImageUrl,
 } from '../../services/timetableService.js'
 import { classFullLabel, needsStream } from '../../services/catalogue.js'
+import { listClassSections } from '../../services/classSectionService.js'
 import { SCHOOL } from '../../data/school.js'
 
 function todayISO() {
@@ -29,6 +30,8 @@ function todayISO() {
 
 export default function AdminTimetables() {
   const toast = useToast()
+  const [sections, setSections] = useState([])
+  const [sectionId, setSectionId] = useState(null)
   const [combo, setCombo] = useState({ classId: 'nursery', stream: null })
   const [file, setFile] = useState(null)
   const [preview, setPreview] = useState(null) // object URL (selected file or stored blob)
@@ -41,10 +44,19 @@ export default function AdminTimetables() {
   const [tick, setTick] = useState(0) // force reload after save/delete
   const localPreview = useRef(null) // object URL created from the selected File (revoked on change/unmount)
 
-  const existing = useMemo(
-    () => getTimetable(combo.classId, combo.stream),
+  useEffect(() => {
+    let alive = true
+    listClassSections(combo.classId, { includeInactive: false })
+      .then((rows) => { if (alive) setSections(rows || []) })
+      .catch((error) => toast.error(error.message || 'Could not load sections.'))
+    return () => { alive = false }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [combo.classId, combo.stream, tick],
+  }, [combo.classId])
+
+  const existing = useMemo(
+    () => getTimetable(combo.classId, combo.stream, sectionId),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [combo.classId, combo.stream, sectionId, tick],
   )
 
   // Load the existing record into the form whenever the combo changes
@@ -99,6 +111,7 @@ export default function AdminTimetables() {
       await saveTimetable({
         class_id: combo.classId,
         stream: needsStream(combo.classId) ? combo.stream : null,
+        section_id: sectionId,
         title,
         academic_session: session,
         effective_date: effectiveDate,
@@ -147,12 +160,21 @@ export default function AdminTimetables() {
           Choose the class whose timetable you want to manage. Classes 11 and 12 also need a stream —
           their timetables are kept separate.
         </p>
-        <ClassStreamPicker value={combo} onChange={(c) => setCombo(c)} />
+        <ClassStreamPicker value={combo} onChange={(c) => { setCombo(c); setSectionId(null) }} />
+        {sections.length > 0 && (
+          <label className="picker__field" style={{ marginTop: '1rem' }}>
+            <span className="picker__label">Section</span>
+            <select className="select" value={sectionId || ''} onChange={(e) => setSectionId(e.target.value || null)}>
+              <option value="">Class level (no section)</option>
+              {sections.map((section) => <option key={section.id} value={section.id}>{section.section_name}</option>)}
+            </select>
+          </label>
+        )}
       </section>
 
       <section className="acard" aria-live="polite">
         <h2 className="acard__title">
-          <CalendarDays size={17} aria-hidden="true" /> {classFullLabel(combo.classId, combo.stream)} timetable
+          <CalendarDays size={17} aria-hidden="true" /> {classFullLabel(combo.classId, combo.stream)}{sectionId ? ` · ${sections.find((s) => s.id === sectionId)?.section_name || 'Section'}` : ''} timetable
           {existing && (
             <span className={`tag ${existing.published ? 'tag--green' : 'tag--silver'}`} style={{ marginLeft: 8 }}>
               {existing.published ? 'Published' : 'Hidden'}
