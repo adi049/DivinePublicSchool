@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
@@ -20,6 +20,7 @@ import SubjectList from '../components/curriculum/SubjectList.jsx'
 import DocumentViewer from '../components/ui/DocumentViewer.jsx'
 import { CLASSES, STREAMS } from '../data/curriculum.js'
 import { needsStream } from '../services/catalogue.js'
+import { listClassSections } from '../services/classSectionService.js'
 import {
   useSubjects,
   usePublishedTimetable,
@@ -39,8 +40,8 @@ const TABS = [
 /* ------------------------------------------------------------------ */
 /*  Timetable tab — photograph published by the school office          */
 /* ------------------------------------------------------------------ */
-function TimetablePanel({ classId, stream }) {
-  const record = usePublishedTimetable(classId, stream)
+function TimetablePanel({ classId, stream, sectionId }) {
+  const record = usePublishedTimetable(classId, stream, sectionId)
   const url = useFileUrl(record?.image_file_id)
 
   if (!record) {
@@ -76,8 +77,8 @@ function TimetablePanel({ classId, stream }) {
 /* ------------------------------------------------------------------ */
 /*  Date-sheet tab — image or PDF published by the school office       */
 /* ------------------------------------------------------------------ */
-function DateSheetPanel({ classId, stream }) {
-  const record = usePublishedDateSheet(classId, stream)
+function DateSheetPanel({ classId, stream, sectionId }) {
+  const record = usePublishedDateSheet(classId, stream, sectionId)
   const url = useFileUrl(record?.document_file_id)
 
   if (!record) {
@@ -128,13 +129,29 @@ export default function Curriculum() {
     page: tab === 'timetable' ? 'timetable' : tab === 'datesheet' ? 'date-sheets' : 'curriculum',
   })
   const [stream, setStream] = useState('science')
+  const [sections, setSections] = useState([])
+  const [sectionId, setSectionId] = useState(null)
+  const [sectionsLoading, setSectionsLoading] = useState(false)
   const panelRef = useRef(null)
+
+  useEffect(() => {
+    let alive = true
+    setSectionsLoading(true)
+    setSections([])
+    setSectionId(null)
+    listClassSections(selected.id, { includeInactive: false })
+      .then((rows) => { if (alive) setSections(rows || []) })
+      .catch(() => { if (alive) setSections([]) })
+      .finally(() => { if (alive) setSectionsLoading(false) })
+    return () => { alive = false }
+  }, [selected.id])
 
   const selectClass = (id) => {
     if (id === selectedId) return
     setSearchParams(id === 'nursery' ? {} : { class: id })
     setTab('overview')
     setStream('science')
+    setSectionId(null)
     // Keep the panel in view on small screens after changing class
     requestAnimationFrame(() => {
       panelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
@@ -232,6 +249,26 @@ export default function Curriculum() {
               </>
             )}
 
+            {sections.length > 0 && (
+              <div className="section-choice" style={{ margin: '1.2rem 0' }}>
+                <p className="panel__blurb"><strong>Choose your section</strong> to view the correct class timetable and date sheet.</p>
+                <div className="stream-row" role="group" aria-label="Select class section">
+                  {sections.map((section) => (
+                    <button
+                      key={section.id}
+                      type="button"
+                      className={`stream-btn ${sectionId === section.id ? 'is-active' : ''}`}
+                      onClick={() => setSectionId(section.id)}
+                      aria-pressed={sectionId === section.id}
+                    >
+                      <span className="stream-btn__label">Section {section.section_name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {sectionsLoading && <p className="csoon">Loading class sections…</p>}
+
             {/* Tabs */}
             <div className="tabs" role="tablist" aria-label="Curriculum details">
               {TABS.map((t) => (
@@ -251,7 +288,7 @@ export default function Curriculum() {
             <div className="tab__body">
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={`${selected.id}-${isStreamClass ? stream : 'std'}-${tab}`}
+                  key={`${selected.id}-${isStreamClass ? stream : 'std'}-${sectionId || 'unselected'}-${tab}`}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
@@ -296,13 +333,13 @@ export default function Curriculum() {
 
                   {tab === 'timetable' && (
                     <div role="tabpanel" aria-label="Timetable">
-                      <TimetablePanel classId={selected.id} stream={streamId} />
+                      {sections.length > 0 && !sectionId ? <p className="csoon">Please select your section above to view its timetable.</p> : <TimetablePanel classId={selected.id} stream={streamId} sectionId={sectionId} />}
                     </div>
                   )}
 
                   {tab === 'datesheet' && (
                     <div role="tabpanel" aria-label="Date sheet">
-                      <DateSheetPanel classId={selected.id} stream={streamId} />
+                      {sections.length > 0 && !sectionId ? <p className="csoon">Please select your section above to view its date sheet.</p> : <DateSheetPanel classId={selected.id} stream={streamId} sectionId={sectionId} />}
                     </div>
                   )}
                 </motion.div>
