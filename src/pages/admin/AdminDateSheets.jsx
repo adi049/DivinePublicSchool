@@ -80,7 +80,7 @@ export default function AdminDateSheets() {
       setPreviewUrl(null)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [combo.classId, combo.stream, tick])
+  }, [combo.classId, combo.stream, sectionId, tick])
 
   const onFile = (f) => {
     setFile(f)
