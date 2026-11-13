@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import {
   LayoutDashboard,
   CalendarDays,
+  Layers3,
   BookMarked,
   FileClock,
   Images,
@@ -30,6 +31,7 @@ import useSEO from '../../hooks/useSEO.js'
 const NAV = [
   { to: '/admin/dashboard', label: 'Overview', icon: LayoutDashboard, end: true },
   { to: '/admin/timetables', label: 'Manage Timetables', icon: CalendarDays },
+  { to: '/admin/sections', label: 'Manage Sections', icon: Layers3 },
   { to: '/admin/subjects', label: 'Manage Subjects', icon: BookMarked },
   { to: '/admin/date-sheets', label: 'Date Sheets', icon: FileClock },
   { to: '/admin/gallery', label: 'Gallery Management', icon: Images },
