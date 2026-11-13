@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import {
   GraduationCap,
   CalendarDays,
+  Layers3,
   BookMarked,
   FileClock,
   Clock3,
@@ -35,6 +36,7 @@ function formatWhen(iso) {
 
 const QUICK_LINKS = [
   { to: '/admin/timetables', label: 'Upload a class timetable', icon: CalendarDays },
+  { to: '/admin/sections', label: 'Manage class sections', icon: Layers3 },
   { to: '/admin/subjects', label: 'Edit subject lists', icon: BookMarked },
   { to: '/admin/date-sheets', label: 'Publish a date sheet', icon: FileClock },
   { to: '/admin/gallery', label: 'Add gallery photographs', icon: Images },
